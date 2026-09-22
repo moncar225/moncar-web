@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { TechnoDemoForm } from '@/components/demo/TechnoDemoForm'
+import { HealthDemo } from '@/components/demo/HealthDemo'
 import { env } from '@/lib/env'
 
 const spaceCards = [
@@ -68,6 +69,8 @@ export function HomePage() {
             </Link>
           ))}
         </section>
+
+        <HealthDemo />
 
         <TechnoDemoForm />
       </main>

@@ -72,9 +72,7 @@ describe('Application moncar-web', () => {
   it('charge l\u2019espace compagnie (lazy) avec son dashboard de démonstration', async () => {
     renderAt('/compagnie', compagnieUser)
     expect(await screen.findByRole('heading', { name: 'Compagnie' })).toBeInTheDocument()
-    expect(screen.getByText('Vue générale')).toBeInTheDocument()
-    // Les données mock sont explicitement identifiées comme telles
-    // (bandeau dashboard + pied de sidebar).
+    expect(await screen.findByText('Vue générale')).toBeInTheDocument()
     expect(screen.getAllByText(/données de démonstration/i).length).toBeGreaterThan(0)
   })
 
