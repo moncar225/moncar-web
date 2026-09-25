@@ -64,11 +64,10 @@ describe('Application moncar-web', () => {
     expect(await screen.findByText('Billets vendus aujourd’hui')).toBeInTheDocument()
   })
 
-  it('affiche la page d\u2019attente d\u2019une rubrique sans logique métier', async () => {
+  it('ouvre les rubriques de l’espace business (revenus)', async () => {
     renderAt('/business/revenus', connecte('u-bag', 'business_agence'))
-    expect(
-      await screen.findByRole('heading', { name: /interface « revenus » à venir/i }),
-    ).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Revenus' })).toBeInTheDocument()
+    expect(await screen.findByText(/En séquestre/)).toBeInTheDocument()
   })
 
   it('redirige vers /403 un utilisateur authentifié sans le rôle requis', async () => {

@@ -56,7 +56,14 @@ const PAGES_ADMIN: Record<string, Page> = {
   comptes: lazy(() => import('@/features/admin/pages/ComptesPage')),
   referentiels: lazy(() => import('@/features/admin/pages/ReferentielsPage')),
 }
-const PAGES_BUSINESS: Record<string, Page> = {}
+const PAGES_BUSINESS: Record<string, Page> = {
+  vehicules: lazy(() => import('@/features/business/pages/VehiculesLocationPage')),
+  disponibilites: lazy(() => import('@/features/business/pages/DisponibilitesPage')),
+  demandes: lazy(() => import('@/features/business/pages/DemandesPage')),
+  revenus: lazy(() => import('@/features/business/pages/RevenusPage')),
+  promotions: lazy(() => import('@/features/business/pages/PromotionsBusinessPage')),
+  litiges: LitigesPage,
+}
 
 function lazyElement(node: ReactNode) {
   return <Suspense fallback={<PageLoader />}>{node}</Suspense>
