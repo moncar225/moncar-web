@@ -34,6 +34,7 @@ import type {
   Ville,
   Voyage,
 } from '@/domain/types'
+import { jourDe } from '@/lib/format'
 
 export interface MockDb {
   version: number
@@ -93,7 +94,7 @@ function jourIso(offset: number, heure = 0, minute = 0): string {
 function dateIso(offset: number): string {
   const d = new Date()
   d.setDate(d.getDate() + offset)
-  return d.toISOString().slice(0, 10)
+  return jourDe(d)
 }
 
 // ——— Plans de sièges ———
@@ -377,7 +378,7 @@ export function construireDb(): MockDb {
         id: `vo-${seqVoyage}`,
         compagnieId: ligne.compagnieId,
         ligneId: ligne.id,
-        reference: `${ligne.code}-${depart.slice(5, 10).replace('-', '')}-${String(h.h).padStart(2, '0')}${String(h.m).padStart(2, '0')}`,
+        reference: `${ligne.code}-${jourDe(depart).slice(5).replace('-', '')}-${String(h.h).padStart(2, '0')}${String(h.m).padStart(2, '0')}`,
         depart,
         vehiculeId: lagune && affecte ? vehiculesLagune[idx % vehiculesLagune.length] : lagune ? undefined : 've-5',
         chauffeurId: lagune && affecte ? chauffeurs[idx % chauffeurs.length] : undefined,
@@ -434,7 +435,8 @@ export function construireDb(): MockDb {
         moyen: guichet ? 'especes' : pick(moyens),
         billetNumero: `MC-${new Date().getFullYear()}-${String(seqBillet).padStart(6, '0')}`,
         bagages: Math.floor(rnd() * 3),
-        creeLe: jourIso(Math.min(jour, 0) - 1, 10),
+        // Ventes réparties sur les jours précédant le départ (graphiques réalistes).
+        creeLe: jourIso(Math.min(jour, 0) - 1 - Math.floor(rnd() * 10), 7 + Math.floor(rnd() * 13), Math.floor(rnd() * 60)),
         embarqueLe: statut === 'embarquee' || statut === 'descendue' ? v.depart : undefined,
       })
       seqBillet++
@@ -639,7 +641,7 @@ export function construireDb(): MockDb {
 
   return {
     version: MOCK_DB_VERSION,
-    generatedOn: now.slice(0, 10),
+    generatedOn: jourDe(now),
     villes,
     compagnies,
     gares,

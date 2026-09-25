@@ -4,6 +4,7 @@
  */
 import { http, type HttpHandler } from 'msw'
 import type { Colis, EtapeColis, StatutVoyage } from '@/domain/types'
+import { jourDe } from '@/lib/format'
 import { db, nouvelId, prochainNumero } from '../db'
 import { gareSuivante, heurePassage, ligneDe, manifeste, reservationActive } from '../metier'
 import { API, auditer, champsManquants, corps, erreur, exiger, nomComplet, ok, visibleParCompagnie } from '../http'
@@ -23,13 +24,13 @@ export const gareHandlers: HttpHandler[] = [
     if (g.refus !== null) return g.refus
     const gare = db().gares.find((x) => x.id === params.id)
     if (gare === undefined || !visibleParCompagnie(g.compte, gare.compagnieId)) return erreur(404, 'INTROUVABLE', 'Gare introuvable.')
-    const jour = new URL(request.url).searchParams.get('date') ?? new Date().toISOString().slice(0, 10)
+    const jour = new URL(request.url).searchParams.get('date') ?? jourDe(new Date())
     const lignes = db().voyages.flatMap((v) => {
       const ligne = ligneDe(v)
       const arret = ligne?.arrets.find((a) => a.gareId === gare.id)
       if (ligne === undefined || arret === undefined) return []
       const passage = heurePassage(v, ligne, arret.ordre)
-      if (passage.slice(0, 10) !== jour) return []
+      if (jourDe(passage) !== jour) return []
       const res = db().reservations.filter((r) => r.voyageId === v.id && reservationActive(r))
       const dernier = arret.ordre === ligne.arrets.length - 1
       return [

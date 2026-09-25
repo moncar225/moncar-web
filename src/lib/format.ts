@@ -26,13 +26,23 @@ export function dateHeure(iso: string): string {
   return `${date(iso)} ${heure(iso)}`
 }
 
+/**
+ * Jour calendaire LOCAL (AAAA-MM-JJ) d'un instant. Ne jamais utiliser
+ * `toISOString().slice(0, 10)`, qui donne le jour UTC : décalé la nuit
+ * hors de l'UTC+0 (ex. Bénin, UTC+1).
+ */
+export function jourDe(instant: string | Date): string {
+  const d = typeof instant === 'string' ? new Date(instant) : instant
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const jj = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${mm}-${jj}`
+}
+
 /** Date locale AAAA-MM-JJ (décalage de `offset` jours). */
 export function jourLocal(offset = 0): string {
   const d = new Date()
   d.setDate(d.getDate() + offset)
-  const mm = String(d.getMonth() + 1).padStart(2, '0')
-  const jj = String(d.getDate()).padStart(2, '0')
-  return `${d.getFullYear()}-${mm}-${jj}`
+  return jourDe(d)
 }
 
 /** Export CSV (séparateur « ; » pour Excel en français, BOM UTF-8). */

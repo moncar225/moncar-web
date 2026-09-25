@@ -8,7 +8,7 @@ import { ApiErrorAlert, PageHeader, QueryView } from '@/features/shared/componen
 import { SeatMap } from '@/features/shared/components/SeatMap'
 import { MOYENS, StatutBadge } from '@/features/shared/labels'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
-import { dateHeure, fcfa, heure, jourLocal } from '@/lib/format'
+import { dateHeure, fcfa, heure, jourDe, jourLocal } from '@/lib/format'
 import { useDisponibilite, useVoyage, useVoyages } from '@/services/exploitation'
 import {
   useAnnulerBillet,
@@ -161,7 +161,7 @@ function Guichet({ journal }: { journal: JournalCaisse }) {
               <div className="voyages-du-jour">
                 {vendables.map((v) => (
                   <button key={v.id} type="button" className="voyage-choix" aria-pressed={v.id === voyageId} onClick={() => choisirVoyage(v.id)}>
-                    <strong>{heure(v.depart)}</strong> {v.depart.slice(0, 10) !== new Date().toISOString().slice(0, 10) && <Badge>Demain</Badge>}
+                    <strong>{heure(v.depart)}</strong> {jourDe(v.depart) !== aujourdHui && <Badge>Demain</Badge>}
                     <br />
                     {v.ligneNom}
                     <br />

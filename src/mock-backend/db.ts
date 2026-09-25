@@ -3,6 +3,7 @@
  * (localStorage) pour que les démonstrations survivent à un rechargement.
  * Régénéré chaque jour, ou à la demande (« Réinitialiser la démo »).
  */
+import { jourDe } from '@/lib/format'
 import { construireDb, MOCK_DB_VERSION, type MockDb } from './seed'
 
 const STORAGE_KEY = 'moncar:mock-db'
@@ -10,7 +11,7 @@ const STORAGE_KEY = 'moncar:mock-db'
 let state: MockDb | null = null
 
 function aujourdHui(): string {
-  return new Date().toISOString().slice(0, 10)
+  return jourDe(new Date())
 }
 
 function charger(): MockDb {

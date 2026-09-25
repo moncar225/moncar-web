@@ -4,7 +4,7 @@ import { Can } from '@/app/permissions'
 import { ApiErrorAlert, PageHeader, QueryView } from '@/features/shared/components/Page'
 import { StatutBadge } from '@/features/shared/labels'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
-import { dateLongue, fcfa, heure, jourLocal } from '@/lib/format'
+import { dateLongue, fcfa, heure, jourDe, jourLocal } from '@/lib/format'
 import {
   useAffecter,
   useAgents,
@@ -53,7 +53,7 @@ export default function PlanningPage() {
         {(data) => {
           const filtres = data.filter((v) => ligneId === '' || v.ligneId === ligneId)
           const aAffecter = filtres.filter((v) => v.statut !== 'annule' && v.statut !== 'arrive' && (v.vehicule === null || v.chauffeur === null))
-          const jours = [...new Set(filtres.map((v) => jourLocalDe(v.depart)))]
+          const jours = [...new Set(filtres.map((v) => jourDe(v.depart)))]
           return (
             <>
               {aAffecter.length > 0 && (
@@ -68,7 +68,7 @@ export default function PlanningPage() {
                   <Table<VoyageResume>
                     caption={`Voyages du ${jour}`}
                     rowKey={(v) => v.id}
-                    rows={filtres.filter((v) => jourLocalDe(v.depart) === jour)}
+                    rows={filtres.filter((v) => jourDe(v.depart) === jour)}
                     columns={[
                       { key: 'depart', header: 'Départ', render: (v) => <strong>{heure(v.depart)}</strong> },
                       { key: 'ligne', header: 'Ligne', render: (v) => <>{v.ligneNom}<br /><span className="muted">{v.reference} · arrivée {heure(v.arrivee)}</span></> },
@@ -116,10 +116,6 @@ export default function PlanningPage() {
   )
 }
 
-function jourLocalDe(iso: string): string {
-  const d = new Date(iso)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
 
 function ProgrammationModal({ onClose }: { onClose: () => void }) {
   const lignes = useLignes()

@@ -5,13 +5,14 @@
  */
 import { http, type HttpHandler } from 'msw'
 import type { Compte, Litige, ParametresPlateforme, ProgrammeFidelite, Promotion } from '@/domain/types'
+import { jourDe } from '@/lib/format'
 import { db, nouvelId, prochainNumero } from '../db'
 import { reservationActive } from '../metier'
 import { numerosSieges } from '../seed'
 import { API, auditer, champsManquants, corps, erreur, exiger, nomComplet, ok, permissionsDe } from '../http'
 
 function jour(iso: string): string {
-  return iso.slice(0, 10)
+  return jourDe(iso)
 }
 
 function compagnieDe(compte: Compte): string | undefined {
@@ -35,7 +36,7 @@ export const plateformeHandlers: HttpHandler[] = [
     const g = exiger(request, 'tableau.consulter')
     if (g.refus !== null) return g.refus
     const cid = g.compte.compagnieId
-    const auj = new Date().toISOString().slice(0, 10)
+    const auj = jourDe(new Date())
     const voyages = db().voyages.filter((v) => v.compagnieId === cid)
     const duJour = voyages.filter((v) => jour(v.depart) === auj)
     const ids = new Set(voyages.map((v) => v.id))
@@ -49,12 +50,12 @@ export const plateformeHandlers: HttpHandler[] = [
     const serie = Array.from({ length: 14 }, (_, i) => {
       const d = new Date()
       d.setDate(d.getDate() - 13 + i)
-      const j = d.toISOString().slice(0, 10)
+      const j = jourDe(d)
       const ventes = db().reservations.filter((r) => ids.has(r.voyageId) && reservationActive(r) && jour(r.creeLe) === j)
       return { jour: j, app: ventes.filter((r) => r.canal === 'app').reduce((s, r) => s + r.montant, 0), guichet: ventes.filter((r) => r.canal === 'guichet').reduce((s, r) => s + r.montant, 0) }
     })
     const alertes: string[] = []
-    const bientot = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
+    const bientot = jourDe(new Date(Date.now() + 7 * 86400000))
     for (const v of db().vehicules.filter((x) => x.compagnieId === cid)) {
       if (v.etat === 'maintenance') alertes.push(`Véhicule ${v.immatriculation} en maintenance.`)
       else if (v.prochaineMaintenance !== undefined && v.prochaineMaintenance <= bientot) alertes.push(`Maintenance du ${v.immatriculation} prévue le ${v.prochaineMaintenance}.`)
