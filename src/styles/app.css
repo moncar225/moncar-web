@@ -390,3 +390,105 @@
   margin: var(--mc-space-5) 0 var(--mc-space-2);
   text-transform: capitalize;
 }
+
+/* ——— Documents imprimables ——— */
+.print-portal {
+  display: none;
+}
+@media print {
+  body.impression > :not(.print-portal) {
+    display: none !important;
+  }
+  body.impression .print-portal {
+    display: block;
+    color: #000;
+    font-size: 11pt;
+  }
+}
+.doc-imprime h1 {
+  font-size: 16pt;
+  margin: 0 0 6pt;
+  color: #000;
+}
+.doc-imprime table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8pt;
+}
+.doc-imprime th,
+.doc-imprime td {
+  border: 1px solid #999;
+  padding: 3pt 5pt;
+  text-align: left;
+  font-size: 9.5pt;
+}
+.billet {
+  border: 1px dashed #333;
+  padding: 10pt;
+  margin-bottom: 10pt;
+  page-break-inside: avoid;
+  max-width: 480px;
+}
+.billet__numero {
+  font-family: ui-monospace, monospace;
+  font-size: 13pt;
+  font-weight: 700;
+}
+.billet dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2pt 10pt;
+  margin: 6pt 0 0;
+}
+.billet dt {
+  color: #555;
+}
+.billet dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ——— Caisse ——— */
+.caisse {
+  display: grid;
+  gap: var(--mc-space-4);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 1200px) {
+  .caisse {
+    grid-template-columns: 1fr;
+  }
+}
+.voyages-du-jour {
+  display: grid;
+  gap: var(--mc-space-2);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+.voyage-choix {
+  text-align: left;
+  border: 1px solid var(--mc-color-border);
+  background: var(--mc-color-surface);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-2) var(--mc-space-3);
+  font: inherit;
+  cursor: pointer;
+}
+.voyage-choix[aria-pressed='true'] {
+  border-color: var(--mc-color-accent);
+  box-shadow: 0 0 0 2px var(--mc-color-accent-tint);
+}
+.voyage-choix strong {
+  font-size: var(--mc-font-size-lg);
+}
+.total-caisse {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--mc-font-size-xl);
+  font-weight: var(--mc-font-weight-bold);
+  color: var(--mc-color-primary-deep);
+  border-top: 2px solid var(--mc-color-border);
+  padding-top: var(--mc-space-3);
+  margin-top: var(--mc-space-3);
+}

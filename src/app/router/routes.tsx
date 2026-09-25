@@ -32,6 +32,9 @@ type Page = LazyExoticComponent<ComponentType>
 
 /** Pages métier par espace (id de rubrique → page) ; absente = page d'attente. */
 const PAGES_COMPAGNIE: Record<string, Page> = {
+  caisse: lazy(() => import('@/features/compagnie/pages/CaissePage')),
+  gare: lazy(() => import('@/features/compagnie/pages/GarePage')),
+  colis: lazy(() => import('@/features/compagnie/pages/ColisPage')),
   lignes: lazy(() => import('@/features/compagnie/pages/LignesPage')),
   vehicules: lazy(() => import('@/features/compagnie/pages/FlottePage')),
   planning: lazy(() => import('@/features/compagnie/pages/PlanningPage')),
