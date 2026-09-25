@@ -9,7 +9,9 @@ import './index.css'
 async function bootstrap() {
   const rootOptions = await initMonitoring()
 
-  if (env.enableMocks) {
+  // Condition statique : en production (VITE_ENABLE_MOCKS absent), le faux
+  // backend n'est même pas inclus dans le build.
+  if (import.meta.env.VITE_ENABLE_MOCKS === 'true' && env.enableMocks) {
     const { enableMocks } = await import('./api/mocks/browser')
     await enableMocks()
   }
