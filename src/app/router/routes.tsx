@@ -31,7 +31,13 @@ const CataloguePage = lazy(() => import('@/features/catalogue/pages/CataloguePag
 type Page = LazyExoticComponent<ComponentType>
 
 /** Pages métier par espace (id de rubrique → page) ; absente = page d'attente. */
+const AuditPage = lazy(() => import('@/features/shared/pages/AuditPage'))
+const LitigesPage = lazy(() => import('@/features/shared/pages/LitigesPage'))
+
 const PAGES_COMPAGNIE: Record<string, Page> = {
+  finances: lazy(() => import('@/features/compagnie/pages/FinancesPage')),
+  commercial: lazy(() => import('@/features/compagnie/pages/CommercialPage')),
+  audit: AuditPage,
   caisse: lazy(() => import('@/features/compagnie/pages/CaissePage')),
   gare: lazy(() => import('@/features/compagnie/pages/GarePage')),
   colis: lazy(() => import('@/features/compagnie/pages/ColisPage')),
@@ -42,6 +48,10 @@ const PAGES_COMPAGNIE: Record<string, Page> = {
   parametres: lazy(() => import('@/features/compagnie/pages/ParametresCompagniePage')),
 }
 const PAGES_ADMIN: Record<string, Page> = {
+  parametres: lazy(() => import('@/features/admin/pages/ParametresPlateformePage')),
+  promotions: lazy(() => import('@/features/admin/pages/PromotionsValidationPage')),
+  litiges: LitigesPage,
+  audit: AuditPage,
   validation: lazy(() => import('@/features/admin/pages/ValidationPage')),
   comptes: lazy(() => import('@/features/admin/pages/ComptesPage')),
   referentiels: lazy(() => import('@/features/admin/pages/ReferentielsPage')),

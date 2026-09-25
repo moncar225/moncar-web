@@ -492,3 +492,53 @@
   padding-top: var(--mc-space-3);
   margin-top: var(--mc-space-3);
 }
+
+/* ——— Graphique en barres (ventes par jour) ——— */
+.barres {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(18px, 1fr);
+  align-items: end;
+  gap: 6px;
+  height: 160px;
+  padding-top: var(--mc-space-2);
+}
+.barres__col {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  position: relative;
+}
+.barres__seg--app {
+  background: var(--mc-color-primary);
+  border-radius: 3px 3px 0 0;
+}
+.barres__seg--guichet {
+  background: var(--mc-color-accent);
+}
+.barres__jours {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(18px, 1fr);
+  gap: 6px;
+  font-size: var(--mc-font-size-xs);
+  color: var(--mc-color-text-muted);
+  text-align: center;
+}
+.legende-barres {
+  display: flex;
+  gap: var(--mc-space-4);
+  font-size: var(--mc-font-size-sm);
+}
+.legende-barres span::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: var(--mc-color-primary);
+}
+.legende-barres span.guichet::before {
+  background: var(--mc-color-accent);
+}

@@ -3,7 +3,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { createAppRoutes } from '../src/app/router/routes'
 import type { SessionUser } from '../src/types/auth'
-import { sessionPour } from './helpers'
+import { connecte } from './helpers'
 
 /** Rend l'application (mémoire) à un chemin donné, avec une session optionnelle. */
 function renderAt(path: string, initialSession?: SessionUser | null) {
@@ -13,8 +13,6 @@ function renderAt(path: string, initialSession?: SessionUser | null) {
   render(<RouterProvider router={router} />)
 }
 
-const compagnieUser = sessionPour('dg')
-const adminUser = sessionPour('admin_super')
 
 describe('Application moncar-web', () => {
   it('démarre sur l\u2019accueil public avec le logo officiel et les trois espaces', async () => {
@@ -60,29 +58,30 @@ describe('Application moncar-web', () => {
   })
 
   it('charge l\u2019espace compagnie (lazy) avec son dashboard de démonstration', async () => {
-    renderAt('/compagnie', compagnieUser)
+    renderAt('/compagnie', connecte('u-dg', 'dg'))
     expect(await screen.findByRole('heading', { name: 'Compagnie' })).toBeInTheDocument()
     expect(await screen.findByText('Vue générale')).toBeInTheDocument()
-    expect(screen.getAllByText(/données de démonstration/i).length).toBeGreaterThan(0)
+    expect(await screen.findByText('Billets vendus aujourd’hui')).toBeInTheDocument()
   })
 
   it('affiche la page d\u2019attente d\u2019une rubrique sans logique métier', async () => {
-    renderAt('/compagnie/commercial', compagnieUser)
+    renderAt('/business/revenus', connecte('u-bag', 'business_agence'))
     expect(
-      await screen.findByRole('heading', { name: /interface « commercial » à venir/i }),
+      await screen.findByRole('heading', { name: /interface « revenus » à venir/i }),
     ).toBeInTheDocument()
   })
 
   it('redirige vers /403 un utilisateur authentifié sans le rôle requis', async () => {
-    renderAt('/admin', compagnieUser)
+    renderAt('/admin', connecte('u-dg', 'dg'))
     expect(
       await screen.findByRole('heading', { name: 'Accès interdit' }),
     ).toBeInTheDocument()
   })
 
   it('charge l\u2019espace admin (lazy) pour un administrateur', async () => {
-    renderAt('/admin', adminUser)
+    renderAt('/admin', connecte('u-adm', 'admin_super'))
     expect(await screen.findByRole('heading', { name: 'Administration' })).toBeInTheDocument()
-    expect(screen.getByText('Vue générale')).toBeInTheDocument()
+    expect(await screen.findByText('Vue générale')).toBeInTheDocument()
+    expect(await screen.findByText('Commissions PROSOFT')).toBeInTheDocument()
   })
 })
