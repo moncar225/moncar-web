@@ -77,6 +77,11 @@ export function HomePage() {
 
       <footer className="site-footer">
         <p>MON CAR — transport · colis · location de véhicules. Côte d&rsquo;Ivoire.</p>
+        {!env.isProd && (
+          <p>
+            Environnement {env.appEnvLabel} · <Link to="/catalogue">Catalogue de composants</Link>
+          </p>
+        )}
       </footer>
     </>
   )

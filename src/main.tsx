@@ -3,9 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './app/router'
 import { env } from './lib/env'
+import { initMonitoring } from './lib/monitoring'
 import './index.css'
 
 async function bootstrap() {
+  const rootOptions = await initMonitoring()
+
   if (env.enableMocks) {
     const { enableMocks } = await import('./api/mocks/browser')
     await enableMocks()
@@ -15,7 +18,7 @@ async function bootstrap() {
   if (root === null) {
     throw new Error('Élément racine #root introuvable.')
   }
-  createRoot(root).render(
+  createRoot(root, rootOptions).render(
     <StrictMode>
       <RouterProvider router={router} />
     </StrictMode>,

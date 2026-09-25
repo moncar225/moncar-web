@@ -9,6 +9,7 @@ import { HomePage } from '@/features/home/pages/HomePage'
 import { ForbiddenPage } from '@/features/errors/pages/ForbiddenPage'
 import { NotFoundPage } from '@/features/errors/pages/NotFoundPage'
 import { PlaceholderPage } from '@/features/shared/pages/PlaceholderPage'
+import { env } from '@/lib/env'
 import type { SessionUser } from '@/types/auth'
 
 // Lazy loading : chaque espace (layout + pages) est un chunk séparé.
@@ -19,6 +20,7 @@ const AdminLayout = lazy(() => import('../layouts/AdminLayout'))
 const CompagnieDashboardPage = lazy(() => import('@/features/compagnie/pages/CompagnieDashboardPage'))
 const BusinessDashboardPage = lazy(() => import('@/features/business/pages/BusinessDashboardPage'))
 const AdminDashboardPage = lazy(() => import('@/features/admin/pages/AdminDashboardPage'))
+const CataloguePage = lazy(() => import('@/features/catalogue/pages/CataloguePage'))
 
 function lazyElement(node: ReactNode) {
   return <Suspense fallback={<PageLoader />}>{node}</Suspense>
@@ -52,6 +54,8 @@ export function createAppRoutes(options: CreateAppRoutesOptions = {}): RouteObje
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/403', element: <ForbiddenPage /> },
+        // Catalogue du design system : dev et recette uniquement.
+        ...(env.isProd ? [] : [{ path: '/catalogue', element: lazyElement(<CataloguePage />) }]),
         {
           path: '/compagnie',
           element: (

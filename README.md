@@ -22,6 +22,23 @@ npm run typecheck  # tsc seul
 npm run test       # Vitest (pool forks, jsdom)
 ```
 
+## Environnements, supervision, catalogue
+
+| Commande | Mode Vite | `VITE_APP_ENV` |
+|---|---|---|
+| `npm run dev` | `development` (`.env.development`) | `dev` |
+| `npm run build:recette` | `recette` (`.env.recette`) | `recette` |
+| `npm run build` | `production` (`.env.production`) | `prod` |
+
+- Valeurs locales ou privées : `.env.local` (ignoré par Git).
+- **Sentry** : actif seulement si `VITE_SENTRY_DSN` est fourni (secret CI
+  `SENTRY_DSN_WEB`) ; le SDK n'est alors chargé qu'à la demande. Aucune
+  donnée personnelle collectée.
+- **Catalogue de composants** : `/catalogue` (dev et recette uniquement,
+  lien en bas de l'accueil).
+- **CI** : `.github/workflows/web.yml` (lint, typage, tests, builds recette et
+  production en artefacts).
+
 ## Structure
 
 ```

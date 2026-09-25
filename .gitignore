@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Fichiers d’environnement locaux (peuvent contenir des valeurs privées)
+.env

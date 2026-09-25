@@ -1,0 +1,58 @@
+# CI web MON CAR (roadmap INF-012 / Sprint 1) : lint, typage strict, tests,
+# builds recette et production (artefacts). Le déploiement (Coolify) sera
+# branché par Richard quand l'environnement de recette existera.
+name: Web
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualite:
+    name: Lint, typage, tests, builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Dépendances
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typage strict
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Build recette
+        env:
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN_WEB }}
+        run: npm run build:recette && mv dist dist-recette
+
+      - name: Build production
+        env:
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN_WEB }}
+        run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: moncar-web-${{ github.run_number }}
+          path: |
+            dist-recette
+            dist
+          retention-days: 14

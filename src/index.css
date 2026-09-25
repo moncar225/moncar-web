@@ -613,3 +613,66 @@ img {
     width: 4.5rem;
   }
 }
+
+/* ---- Catalogue du design system (/catalogue, dev et recette) ---- */
+.catalogue {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--mc-space-6) var(--mc-space-4);
+}
+
+.catalogue__meta {
+  color: var(--mc-color-text-muted);
+  font-size: var(--mc-font-size-sm);
+}
+
+.catalogue__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--mc-space-3);
+}
+
+.catalogue__row > .mc-card,
+.catalogue__row > .mc-table-wrap,
+.catalogue__row > [role='alert'],
+.catalogue__row > [role='status'] {
+  flex: 1 1 320px;
+}
+
+.catalogue__swatch {
+  margin: 0;
+  width: 104px;
+  font-size: var(--mc-font-size-xs);
+}
+
+.catalogue__swatch-color {
+  display: block;
+  height: 44px;
+  border: 1px solid var(--mc-color-border);
+  border-radius: var(--mc-radius-md);
+  margin-bottom: var(--mc-space-1);
+}
+
+.catalogue__skeletons {
+  display: grid;
+  gap: var(--mc-space-2);
+  flex: 1 1 240px;
+}
+
+.catalogue__errors {
+  display: grid;
+  gap: var(--mc-space-2);
+  margin: 0;
+}
+
+.catalogue__errors > div {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: var(--mc-space-3);
+}
+
+.catalogue__errors dd {
+  margin: 0;
+}
