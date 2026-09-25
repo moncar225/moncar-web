@@ -37,6 +37,7 @@ export function HomePage() {
         </Link>
         <nav className="site-header__links" aria-label="Liens publics">
           <a href="#espaces">Espaces</a>
+          <Link to="/connexion">Se connecter</Link>
         </nav>
       </header>
 

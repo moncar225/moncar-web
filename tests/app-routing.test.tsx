@@ -3,6 +3,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { createAppRoutes } from '../src/app/router/routes'
 import type { SessionUser } from '../src/types/auth'
+import { sessionPour } from './helpers'
 
 /** Rend l'application (mémoire) à un chemin donné, avec une session optionnelle. */
 function renderAt(path: string, initialSession?: SessionUser | null) {
@@ -12,17 +13,8 @@ function renderAt(path: string, initialSession?: SessionUser | null) {
   render(<RouterProvider router={router} />)
 }
 
-const compagnieUser: SessionUser = {
-  id: 'u-compagnie-1',
-  fullName: 'Utilisateur Compagnie',
-  roles: ['compagnie'],
-}
-
-const adminUser: SessionUser = {
-  id: 'u-admin-1',
-  fullName: 'Utilisateur Admin',
-  roles: ['admin'],
-}
+const compagnieUser = sessionPour('dg')
+const adminUser = sessionPour('admin_super')
 
 describe('Application moncar-web', () => {
   it('démarre sur l\u2019accueil public avec le logo officiel et les trois espaces', async () => {
@@ -64,9 +56,7 @@ describe('Application moncar-web', () => {
 
   it('bloque un espace protégé lorsque l\u2019utilisateur n\u2019est pas authentifié', async () => {
     renderAt('/compagnie', null)
-    expect(
-      await screen.findByRole('heading', { name: 'Connexion requise' }),
-    ).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Connexion' })).toBeInTheDocument()
   })
 
   it('charge l\u2019espace compagnie (lazy) avec son dashboard de démonstration', async () => {
@@ -77,9 +67,9 @@ describe('Application moncar-web', () => {
   })
 
   it('affiche la page d\u2019attente d\u2019une rubrique sans logique métier', async () => {
-    renderAt('/compagnie/voyages', compagnieUser)
+    renderAt('/compagnie/commercial', compagnieUser)
     expect(
-      await screen.findByRole('heading', { name: /interface « voyages » à venir/i }),
+      await screen.findByRole('heading', { name: /interface « commercial » à venir/i }),
     ).toBeInTheDocument()
   })
 

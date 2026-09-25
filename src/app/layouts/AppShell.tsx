@@ -4,13 +4,20 @@ import { NavLink } from 'react-router-dom'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import type { BreadcrumbItem } from '@/components/ui/Breadcrumb'
 import { Avatar } from '@/components/ui/Avatar'
+import { Button } from '@/components/ui/Button'
+import type { Permission } from '@/domain/permissions'
+import { env } from '@/lib/env'
+import { httpClient } from '@/api/client'
 import type { SessionUser } from '@/types/auth'
+import { useAuth } from '../providers/AuthProvider'
 
 export interface ShellNavItem {
   id: string
   label: string
   /** Chemin absolu de la page (ex. « /compagnie »). */
   to: string
+  /** Permission requise : l'entrée est masquée sans elle (le serveur vérifie aussi). */
+  permission?: Permission
 }
 
 interface AppShellProps {
@@ -42,6 +49,16 @@ export function AppShell({
   children,
 }: AppShellProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { logout } = useAuth()
+  const visibles = navItems.filter(
+    (item) => item.permission === undefined || (user?.permissions?.includes(item.permission) ?? false),
+  )
+  const entite = user?.gare?.nom ?? user?.compagnie?.nom ?? user?.fournisseur?.nom ?? null
+
+  async function reinitialiserDemo() {
+    await httpClient.post('/demo/reinitialisation', { skipIdempotency: true })
+    window.location.reload()
+  }
 
   // Ferme le drawer si la fenêtre repasse en desktop.
   useEffect(() => {
@@ -61,7 +78,7 @@ export function AppShell({
       <p className="sidebar__space">{espaceLabel}</p>
       <nav aria-label={`Navigation ${espaceLabel}`}>
         <ul>
-          {navItems.map((item) => (
+          {visibles.map((item) => (
             <li key={item.id}>
               <NavLink
                 to={item.to}
@@ -76,7 +93,16 @@ export function AppShell({
           ))}
         </ul>
       </nav>
-      <p className="sidebar__footer">Interfaces en construction — données de démonstration.</p>
+      {env.enableMocks && (
+        <div className="sidebar__demo">
+          <Button size="sm" variant="ghost" onClick={() => void reinitialiserDemo()}>
+            Réinitialiser la démo
+          </Button>
+        </div>
+      )}
+      <p className="sidebar__footer">
+        {env.enableMocks ? 'Données de démonstration (faux backend) — API MON CAR à venir.' : `Environnement ${env.appEnvLabel}`}
+      </p>
     </>
   )
 
@@ -114,7 +140,21 @@ export function AppShell({
           </button>
           <h1 className="topbar__title">{title}</h1>
           {actions}
-          {user !== null && <Avatar name={user.fullName} size="sm" />}
+          {user !== null && (
+            <div className="topbar__user">
+              <div>
+                {user.fullName}
+                <small>
+                  {user.posteLibelle ?? ''}
+                  {entite !== null ? ` · ${entite}` : ''}
+                </small>
+              </div>
+              <Avatar name={user.fullName} size="sm" />
+              <Button size="sm" variant="outline" onClick={logout}>
+                Déconnexion
+              </Button>
+            </div>
+          )}
         </header>
 
         <div className="shell__content">

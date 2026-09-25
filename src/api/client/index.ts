@@ -36,8 +36,18 @@ export const timestampManager = new TimestampManager({
   enabled: false,
 });
 
+/**
+ * Base de l'API (`…/api/v1`). Sans API configurée, les appels partent vers
+ * `<origine>/api/v1`, interceptés par le faux backend MSW quand il est actif.
+ */
+function apiBaseUrl(): string {
+  if (env.apiBaseUrl.length > 0) return env.apiBaseUrl;
+  const origin = typeof window === 'undefined' ? 'http://localhost' : window.location.origin;
+  return `${origin}/api/v1`;
+}
+
 export const httpClient = new HttpClient({
-  baseUrl: env.apiBaseUrl.length === 0 ? 'http://localhost/moncar-api-unset' : env.apiBaseUrl,
+  baseUrl: apiBaseUrl(),
   session: sessionManager,
   idempotency: idempotencyManager,
   timestamp: timestampManager,

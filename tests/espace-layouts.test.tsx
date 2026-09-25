@@ -1,62 +1,62 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { AppProviders } from '../src/app/providers/AppProviders'
-import CompanyLayout from '../src/app/layouts/CompanyLayout'
-import BusinessLayout from '../src/app/layouts/BusinessLayout'
-import AdminLayout from '../src/app/layouts/AdminLayout'
-import type { SessionUser } from '../src/types/auth'
+import { renderAt, sessionPour } from './helpers'
 
-const anyRoleUser: SessionUser = {
-  id: 'u-test',
-  fullName: 'Test Utilisateur',
-  roles: ['compagnie', 'business', 'admin'],
+function menu() {
+  return within(screen.getAllByRole('navigation', { name: /^navigation/i })[0] as HTMLElement)
 }
 
-/** Monte un layout espace avec des pages filles factices. */
-function renderLayout(layout: React.ReactElement) {
-  const router = createMemoryRouter([
-    {
-      path: '/',
-      element: <AppProviders initialSession={anyRoleUser}>{layout}</AppProviders>,
-      children: [{ index: true, element: <p>Contenu de la page</p> }],
-    },
-  ])
-  render(<RouterProvider router={router} />)
-}
-
-describe('CompanyLayout', () => {
-  it('affiche la sidebar avec les rubriques UI de l\u2019espace compagnie', async () => {
-    renderLayout(<CompanyLayout />)
-    for (const label of ['Tableau de bord', 'Voyages', 'Réservations', 'Véhicules', 'Personnel', 'Paramètres']) {
-      expect(await screen.findByRole('link', { name: label })).toBeInTheDocument()
+describe('Menus des espaces filtrés par permissions', () => {
+  it('le directeur général voit toutes les rubriques compagnie', async () => {
+    renderAt('/compagnie', sessionPour('dg'))
+    await screen.findByRole('navigation', { name: /navigation espace compagnie/i })
+    for (const label of ['Tableau de bord', 'Caisse', 'Gare du jour', 'Planning des voyages', 'Finances', 'Personnel et gares']) {
+      expect(menu().getByRole('link', { name: label })).toBeInTheDocument()
     }
-    expect(screen.getByText('Contenu de la page')).toBeInTheDocument()
-  })
-})
-
-describe('BusinessLayout', () => {
-  it('affiche les rubriques et le sélecteur d\u2019entité (mock)', async () => {
-    renderLayout(<BusinessLayout />)
-    expect(await screen.findByRole('link', { name: 'Locations' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /agence location abidjan/i })).toBeInTheDocument()
   })
 
-  it('permet de changer d\u2019entité via le sélecteur', async () => {
-    const user = userEvent.setup()
-    renderLayout(<BusinessLayout />)
-    await user.click(await screen.findByRole('button', { name: /agence location abidjan/i }))
-    await user.click(screen.getByRole('menuitem', { name: /kouassi vtc/i }))
-    expect(screen.getByRole('button', { name: /kouassi vtc/i })).toBeInTheDocument()
+  it('la caisse ne voit que ses rubriques et arrive directement sur la caisse', async () => {
+    const router = renderAt('/compagnie', sessionPour('caisse'))
+    await screen.findByRole('navigation', { name: /navigation espace compagnie/i })
+    expect(menu().getByRole('link', { name: 'Caisse' })).toBeInTheDocument()
+    expect(menu().queryByRole('link', { name: 'Finances' })).not.toBeInTheDocument()
+    expect(menu().queryByRole('link', { name: 'Tableau de bord' })).not.toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/compagnie/caisse')
   })
-})
 
-describe('AdminLayout', () => {
-  it('affiche les rubriques d\u2019administration', async () => {
-    renderLayout(<AdminLayout />)
-    for (const label of ['Dashboard', 'Utilisateurs', 'Compagnies', 'Business', 'Audit', 'Paramètres']) {
-      expect(await screen.findByRole('link', { name: label })).toBeInTheDocument()
+  it('une rubrique non autorisée ouverte par URL directe renvoie la page 403 avec le motif', async () => {
+    renderAt('/compagnie/finances', sessionPour('caisse'))
+    expect(await screen.findByRole('heading', { name: 'Accès interdit' })).toBeInTheDocument()
+    expect(screen.getByText(/Consulter les finances/)).toBeInTheDocument()
+  })
+
+  it('l’espace business affiche le fournisseur de la session', async () => {
+    renderAt('/business', sessionPour('business_agence'))
+    await screen.findByRole('navigation', { name: /navigation espace business/i })
+    expect(menu().getByRole('link', { name: 'Demandes' })).toBeInTheDocument()
+    expect(screen.getAllByText(/Agence Location Abidjan/).length).toBeGreaterThan(0)
+  })
+
+  it('un poste PROSOFT spécialisé ne voit que sa rubrique', async () => {
+    renderAt('/admin', sessionPour('admin_support'))
+    await screen.findByRole('navigation', { name: /navigation administration/i })
+    expect(menu().getByRole('link', { name: 'Support et litiges' })).toBeInTheDocument()
+    expect(menu().queryByRole('link', { name: 'Paramètres plateforme' })).not.toBeInTheDocument()
+  })
+
+  it('le super administrateur voit les 7 rubriques PROSOFT', async () => {
+    renderAt('/admin', sessionPour('admin_super'))
+    await screen.findByRole('navigation', { name: /navigation administration/i })
+    for (const label of [
+      'Validation des partenaires',
+      'Comptes et rôles',
+      'Référentiels',
+      'Paramètres plateforme',
+      'Promotions',
+      'Support et litiges',
+      'Journal d’audit',
+    ]) {
+      expect(menu().getByRole('link', { name: label })).toBeInTheDocument()
     }
   })
 })

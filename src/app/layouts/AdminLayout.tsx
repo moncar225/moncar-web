@@ -1,26 +1,19 @@
 import { Outlet } from 'react-router-dom'
 import { AppShell } from './AppShell'
 import { useAuth } from '../providers/AuthProvider'
+import { NAV_ADMIN } from '../navigation'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 
-const navItems = [
-  { id: 'dashboard', label: 'Dashboard', to: '/admin' },
-  { id: 'utilisateurs', label: 'Utilisateurs', to: '/admin/utilisateurs' },
-  { id: 'compagnies', label: 'Compagnies', to: '/admin/compagnies' },
-  { id: 'business', label: 'Business', to: '/admin/business' },
-  { id: 'audit', label: 'Audit', to: '/admin/audit' },
-  { id: 'parametres', label: 'Paramètres', to: '/admin/parametres' },
-]
-
-/** Layout de l'espace /admin (lazy loading). */
+/** Layout de l'espace /admin (lazy loading) — menu filtré par permissions. */
 export default function AdminLayout() {
-  useDocumentTitle('MON CAR — Administration')
+  useDocumentTitle('MON CAR — Administration PROSOFT')
   const { session } = useAuth()
+  const entite = null
   return (
     <AppShell
-      espaceLabel="Administration"
-      navItems={navItems}
-      breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Administration' }]}
+      espaceLabel="Administration PROSOFT"
+      navItems={NAV_ADMIN}
+      breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Administration' }, ...(entite !== null ? [{ label: entite }] : [])]}
       title="Administration"
       user={session}
     >
