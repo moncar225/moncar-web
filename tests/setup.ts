@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll } from 'vitest';
 import { createMockServer } from '@/api/mocks/node';
 import { reinitialiserDb } from '@/mock-backend/db';
@@ -15,6 +15,9 @@ if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototy
     this.dispatchEvent(new Event('close'));
   };
 }
+
+// Pages chargées à la demande + faux backend : sous charge, plus d'1 s.
+configure({ asyncUtilTimeout: 5000 });
 
 const server = createMockServer();
 
