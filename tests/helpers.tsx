@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { sessionManager } from '../src/api/client'
 import { createAppRoutes } from '../src/app/router/routes'
 import { POSTES } from '../src/domain/permissions'
 import type { Poste } from '../src/domain/types'
@@ -29,4 +30,13 @@ export function renderAt(path: string, initialSession?: SessionUser | null) {
   const router = createMemoryRouter(createAppRoutes({ initialSession }), { initialEntries: [path] })
   render(<RouterProvider router={router} />)
   return router
+}
+
+/**
+ * Session réelle sur le faux backend : jeton reconnu par MSW + utilisateur
+ * de session correspondant (comptes du jeu de démo, ex. `u-dg`, `u-adm`).
+ */
+export function connecte(compteId: string, poste: Poste, extra: Partial<SessionUser> = {}): SessionUser {
+  sessionManager.set({ token: `demo.${compteId}.test`, expiresAt: Date.now() + 3_600_000, userId: compteId })
+  return sessionPour(poste, { id: compteId, ...extra })
 }

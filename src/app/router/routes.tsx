@@ -31,8 +31,15 @@ const CataloguePage = lazy(() => import('@/features/catalogue/pages/CataloguePag
 type Page = LazyExoticComponent<ComponentType>
 
 /** Pages métier par espace (id de rubrique → page) ; absente = page d'attente. */
-const PAGES_COMPAGNIE: Record<string, Page> = {}
-const PAGES_ADMIN: Record<string, Page> = {}
+const PAGES_COMPAGNIE: Record<string, Page> = {
+  personnel: lazy(() => import('@/features/compagnie/pages/PersonnelPage')),
+  parametres: lazy(() => import('@/features/compagnie/pages/ParametresCompagniePage')),
+}
+const PAGES_ADMIN: Record<string, Page> = {
+  validation: lazy(() => import('@/features/admin/pages/ValidationPage')),
+  comptes: lazy(() => import('@/features/admin/pages/ComptesPage')),
+  referentiels: lazy(() => import('@/features/admin/pages/ReferentielsPage')),
+}
 const PAGES_BUSINESS: Record<string, Page> = {}
 
 function lazyElement(node: ReactNode) {

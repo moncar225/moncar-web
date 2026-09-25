@@ -3,6 +3,18 @@ import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll } from 'vitest';
 import { createMockServer } from '@/api/mocks/node';
 import { reinitialiserDb } from '@/mock-backend/db';
+import { sessionManager } from '@/api/client';
+
+// jsdom n'implémente pas <dialog>.showModal/close : remplacement minimal.
+if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal !== 'function') {
+  HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+    this.setAttribute('open', '');
+  };
+  HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+    this.removeAttribute('open');
+    this.dispatchEvent(new Event('close'));
+  };
+}
 
 const server = createMockServer();
 
@@ -14,6 +26,7 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   reinitialiserDb();
+  sessionManager.clear();
 });
 
 afterAll(() => {
