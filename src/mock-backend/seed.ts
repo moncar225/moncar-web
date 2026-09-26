@@ -68,7 +68,7 @@ export interface MockDb {
   sequences: Record<string, number>
 }
 
-export const MOCK_DB_VERSION = 1
+export const MOCK_DB_VERSION = 2
 export const MOT_DE_PASSE_DEMO = 'Moncar2026'
 
 // ——— Utilitaires déterministes ———
@@ -89,6 +89,14 @@ function jourIso(offset: number, heure = 0, minute = 0): string {
   d.setHours(heure, minute, 0, 0)
   d.setDate(d.getDate() + offset)
   return d.toISOString()
+}
+
+/** Horodatage d’une vente : jamais dans le futur quand elle a lieu aujourd’hui. */
+function venduLe(rnd: () => number, offset: number): string {
+  if (offset < 0) return jourIso(offset, 7 + Math.floor(rnd() * 13), Math.floor(rnd() * 60))
+  const maintenant = new Date()
+  const minutes = Math.floor(rnd() * Math.max(1, maintenant.getHours() * 60 + maintenant.getMinutes()))
+  return jourIso(0, Math.floor(minutes / 60), minutes % 60)
 }
 
 function dateIso(offset: number): string {
@@ -435,8 +443,9 @@ export function construireDb(): MockDb {
         moyen: guichet ? 'especes' : pick(moyens),
         billetNumero: `MC-${new Date().getFullYear()}-${String(seqBillet).padStart(6, '0')}`,
         bagages: Math.floor(rnd() * 3),
-        // Ventes réparties sur les jours précédant le départ (graphiques réalistes).
-        creeLe: jourIso(Math.min(jour, 0) - 1 - Math.floor(rnd() * 10), 7 + Math.floor(rnd() * 13), Math.floor(rnd() * 60)),
+        // Ventes réparties sur les jours précédant le départ (graphiques réalistes) ;
+        // les voyages à venir se vendent aussi aujourd’hui, avant l’heure courante.
+        creeLe: venduLe(rnd, jour > 0 ? -Math.floor(rnd() * 10) : Math.min(jour, 0) - 1 - Math.floor(rnd() * 10)),
         embarqueLe: statut === 'embarquee' || statut === 'descendue' ? v.depart : undefined,
       })
       seqBillet++

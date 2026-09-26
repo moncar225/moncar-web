@@ -49,7 +49,13 @@ interface QueryViewProps<T> {
 
 /** États standard d'une requête : chargement, erreur (réessayer), vide, données. */
 export function QueryView<T>({ query, loading = 'Chargement…', isEmpty, empty, children }: QueryViewProps<T>) {
-  if (query.isPending) return <Spinner label={loading} />
+  if (query.isPending)
+    return (
+      <div className="mc-loading">
+        <Spinner label={loading} />
+        <span aria-hidden="true">{loading}</span>
+      </div>
+    )
   if (query.isError) {
     const err = query.error
     return (

@@ -1,11 +1,5 @@
 /* MON CAR — styles des écrans métier (espaces compagnie, business, admin). */
 
-.mc-input__hint {
-  margin: var(--mc-space-1) 0 0;
-  font-size: var(--mc-font-size-sm);
-  color: var(--mc-color-text-muted);
-}
-
 /* ——— Connexion ——— */
 .auth-page {
   min-height: 100vh;
@@ -86,15 +80,24 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--mc-space-3);
-  margin-bottom: var(--mc-space-4);
+  gap: var(--mc-space-4);
+  margin-bottom: var(--mc-space-5);
+}
+.page-header > div:first-child {
+  min-width: 0;
+  flex: 1 1 22rem;
 }
 .page-header h2 {
   margin: 0;
+  font-size: var(--mc-font-size-2xl);
+  font-weight: var(--mc-font-weight-extrabold);
+  letter-spacing: var(--mc-letter-spacing-tight);
 }
 .page-header p {
   margin: var(--mc-space-1) 0 0;
+  max-width: 48rem;
   color: var(--mc-color-text-muted);
+  font-size: var(--mc-font-size-sm);
 }
 .page-header__actions,
 .toolbar {
@@ -152,8 +155,8 @@
 }
 .kpis {
   display: grid;
-  gap: var(--mc-space-3);
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--mc-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   margin-bottom: var(--mc-space-4);
 }
 .kpis--2 {
@@ -168,21 +171,53 @@
   }
 }
 .kpi {
+  position: relative;
+  min-width: 0;
   background: var(--mc-color-surface);
   border: 1px solid var(--mc-color-border);
-  border-radius: var(--mc-radius-md);
-  padding: var(--mc-space-3) var(--mc-space-4);
+  border-radius: var(--mc-radius-lg);
+  padding: var(--mc-space-4) var(--mc-space-5);
+  box-shadow: var(--mc-shadow-1);
+  overflow: hidden;
+  transition: box-shadow var(--mc-transition-base);
+}
+.kpi::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--mc-color-primary), var(--mc-color-primary-soft));
+}
+.kpis > .kpi:first-child::after {
+  background: var(--mc-gradient-accent);
+}
+.kpi:hover {
+  box-shadow: var(--mc-shadow-2);
 }
 .kpi__label {
   margin: 0;
-  font-size: var(--mc-font-size-sm);
+  font-size: var(--mc-font-size-xs);
+  font-weight: var(--mc-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--mc-color-text-muted);
 }
 .kpi__value {
-  margin: var(--mc-space-1) 0 0;
+  margin: var(--mc-space-2) 0 0;
   font-size: var(--mc-font-size-xl);
-  font-weight: var(--mc-font-weight-bold);
+  font-weight: var(--mc-font-weight-extrabold);
+  letter-spacing: var(--mc-letter-spacing-tight);
+  font-variant-numeric: tabular-nums;
   color: var(--mc-color-primary-deep);
+  overflow-wrap: anywhere;
+}
+.mc-card .kpi {
+  box-shadow: none;
+  background: var(--mc-color-surface-raised);
+  padding: var(--mc-space-3) var(--mc-space-4);
+}
+.mc-card .kpi::after {
+  display: none;
 }
 .muted {
   color: var(--mc-color-text-muted);
@@ -245,8 +280,12 @@
 .selectable {
   cursor: pointer;
 }
+.selectable:hover {
+  background: var(--mc-color-surface-raised);
+}
 .selectable[aria-current='true'] {
   background: var(--mc-color-primary-tint);
+  box-shadow: inset 3px 0 0 var(--mc-color-accent);
 }
 .secret {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -411,10 +450,20 @@
 .arrets-table select {
   width: 100%;
   min-width: 70px;
+  min-height: 34px;
   font: inherit;
-  padding: 4px 6px;
-  border: 1px solid var(--mc-color-border);
+  font-size: var(--mc-font-size-sm);
+  padding: 4px 8px;
+  border: 1px solid var(--mc-color-border-strong);
   border-radius: var(--mc-radius-sm);
+  background: var(--mc-color-surface);
+  color: var(--mc-color-text);
+}
+.arrets-table input:focus,
+.arrets-table select:focus {
+  outline: none;
+  border-color: var(--mc-color-primary);
+  box-shadow: var(--mc-ring);
 }
 
 /* ——— Planning ——— */
@@ -517,13 +566,20 @@
   border: 1px solid var(--mc-color-border);
   background: var(--mc-color-surface);
   border-radius: var(--mc-radius-md);
-  padding: var(--mc-space-2) var(--mc-space-3);
+  padding: var(--mc-space-3);
   font: inherit;
+  color: var(--mc-color-text);
   cursor: pointer;
+  transition: border-color var(--mc-transition-fast), box-shadow var(--mc-transition-fast);
+}
+.voyage-choix:hover {
+  border-color: var(--mc-color-primary-soft);
+  box-shadow: var(--mc-shadow-2);
 }
 .voyage-choix[aria-pressed='true'] {
   border-color: var(--mc-color-accent);
-  box-shadow: 0 0 0 2px var(--mc-color-accent-tint);
+  background: var(--mc-color-accent-tint);
+  box-shadow: 0 0 0 3px var(--mc-color-accent-tint);
 }
 .voyage-choix strong {
   font-size: var(--mc-font-size-lg);
