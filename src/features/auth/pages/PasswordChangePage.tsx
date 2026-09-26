@@ -5,6 +5,7 @@ import { Alert, Button, Input } from '@/components/ui'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { ApiErrorAlert } from '@/features/shared/components/Page'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { AuthShell } from '../components/AuthShell'
 import { changerMotDePasseTemporaire, espaceAccueil } from '@/services/auth'
 
 const REGLES = [
@@ -46,8 +47,9 @@ export function PasswordChangePage() {
   }
 
   return (
-    <main className="auth-page">
-      <section className="auth-card" aria-labelledby="pwd-title" style={{ maxWidth: 440, width: '100%' }}>
+    <AuthShell>
+      <section className="auth-card" aria-labelledby="pwd-title">
+        <p className="auth-card__eyebrow">Première connexion</p>
         <h1 id="pwd-title">Choisissez votre mot de passe</h1>
         {session.motDePasseTemporaire === true && (
           <Alert variant="warning">
@@ -62,10 +64,10 @@ export function PasswordChangePage() {
             value={mdp}
             onChange={(e) => setMdp(e.target.value)}
           />
-          <ul className="list-plain" aria-label="Règles du mot de passe">
+          <ul className="regles-mdp" aria-label="Règles du mot de passe">
             {REGLES.map((r) => (
-              <li key={r.id} style={{ color: r.test(mdp) ? 'var(--mc-color-success)' : 'var(--mc-color-text-muted)' }}>
-                {r.test(mdp) ? '✓' : '○'} {r.libelle}
+              <li key={r.id} className={r.test(mdp) ? 'is-ok' : undefined}>
+                <span aria-hidden="true">{r.test(mdp) ? '✓' : '○'}</span> {r.libelle}
               </li>
             ))}
           </ul>
@@ -86,6 +88,6 @@ export function PasswordChangePage() {
           </Button>
         </form>
       </section>
-    </main>
+    </AuthShell>
   )
 }

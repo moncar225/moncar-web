@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, Input } from '@/components/ui'
+import { AuthShell } from '../components/AuthShell'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { ApiErrorAlert } from '@/features/shared/components/Page'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
@@ -76,100 +77,100 @@ export function LoginPage() {
     }
   }
 
+  const demo = env.enableMocks && !env.isProd ? (
+    <details className="demo-accounts" open>
+      <summary>
+        Comptes de démonstration
+        <small>
+          Mot de passe <strong>Moncar2026</strong> · code SMS <strong>123456</strong>
+        </small>
+      </summary>
+      <ul>
+        {COMPTES_DEMO.map((c) => (
+          <li key={c.id}>
+            <button
+              type="button"
+              onClick={() => {
+                setDefi(null)
+                setIdentifiant(c.id)
+                setMotDePasse(c.temporaire === true ? 'Temp1234' : 'Moncar2026')
+              }}
+            >
+              {c.libelle}
+              <small>{c.entite}</small>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ) : undefined
+
   return (
-    <main className="auth-page">
-      <div className="auth-page__grid">
-        <section className="auth-card" aria-labelledby="login-title">
-          <div className="auth-card__brand">
-            <img src="/brand/logo.png" alt="" />
-            <strong>MON CAR PRO Web</strong>
-          </div>
-          <h1 id="login-title">{defi === null ? 'Connexion' : 'Vérification en deux étapes'}</h1>
-          <form onSubmit={(e) => void soumettre(e)} noValidate>
-            {defi === null ? (
-              <>
-                <Input
-                  label="Téléphone ou e-mail"
-                  autoComplete="username"
-                  value={identifiant}
-                  onChange={(e) => setIdentifiant(e.target.value)}
-                  required
-                />
-                <Input
-                  label="Mot de passe"
-                  type="password"
-                  autoComplete="current-password"
-                  value={motDePasse}
-                  onChange={(e) => setMotDePasse(e.target.value)}
-                  required
-                />
-              </>
-            ) : (
+    <AuthShell aside={demo}>
+      <section className="auth-card" aria-labelledby="login-title">
+        <p className="auth-card__eyebrow">{defi === null ? 'Espace professionnel' : 'Sécurité du compte'}</p>
+        <h1 id="login-title">{defi === null ? 'Connexion' : 'Vérification en deux étapes'}</h1>
+        <p className="auth-card__lead">
+          {defi === null
+            ? 'Connectez-vous avec l’identifiant fourni par votre compagnie ou par PROSOFT.'
+            : 'Saisissez le code à 6 chiffres envoyé par SMS.'}
+        </p>
+        <form onSubmit={(e) => void soumettre(e)} noValidate>
+          {defi === null ? (
+            <>
               <Input
-                label={`Code reçu par SMS au ${defi.destination}`}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                hint={env.enableMocks ? 'Démonstration : code 123456.' : undefined}
+                label="Téléphone ou e-mail"
+                autoComplete="username"
+                value={identifiant}
+                onChange={(e) => setIdentifiant(e.target.value)}
                 required
               />
-            )}
-            <ApiErrorAlert error={erreur} />
+              <Input
+                label="Mot de passe"
+                type="password"
+                autoComplete="current-password"
+                value={motDePasse}
+                onChange={(e) => setMotDePasse(e.target.value)}
+                required
+              />
+            </>
+          ) : (
+            <Input
+              label={`Code reçu par SMS au ${defi.destination}`}
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+              hint={env.enableMocks ? 'Démonstration : code 123456.' : undefined}
+              required
+            />
+          )}
+          <ApiErrorAlert error={erreur} />
+          <Button
+            type="submit"
+            isLoading={enCours}
+            disabled={defi === null ? identifiant === '' || motDePasse === '' : code.length !== 6}
+          >
+            {defi === null ? 'Se connecter' : 'Valider le code'}
+          </Button>
+          {defi !== null && (
             <Button
-              type="submit"
-              isLoading={enCours}
-              disabled={defi === null ? identifiant === '' || motDePasse === '' : code.length !== 6}
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setDefi(null)
+                setCode('')
+              }}
             >
-              {defi === null ? 'Se connecter' : 'Valider le code'}
+              Revenir
             </Button>
-            {defi !== null && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => {
-                  setDefi(null)
-                  setCode('')
-                }}
-              >
-                Revenir
-              </Button>
-            )}
-          </form>
-          <p className="muted" style={{ marginTop: 'var(--mc-space-4)', fontSize: 'var(--mc-font-size-sm)' }}>
-            Les comptes sont créés par votre compagnie ou par PROSOFT. Mot de passe oublié : contactez votre
-            administrateur. <Link to="/">Accueil</Link>
-          </p>
-        </section>
-
-        {env.enableMocks && !env.isProd && (
-          <section className="demo-accounts" aria-labelledby="demo-accounts-title">
-            <h2 id="demo-accounts-title">Comptes de démonstration</h2>
-            <p className="muted">
-              Faux backend (en attendant l’API) — mot de passe <strong>Moncar2026</strong>, code SMS{' '}
-              <strong>123456</strong>.
-            </p>
-            <ul>
-              {COMPTES_DEMO.map((c) => (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDefi(null)
-                      setIdentifiant(c.id)
-                      setMotDePasse(c.temporaire === true ? 'Temp1234' : 'Moncar2026')
-                    }}
-                  >
-                    {c.libelle}
-                    <small>{c.entite}</small>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
-    </main>
+          )}
+        </form>
+        <p className="auth-card__help">
+          Mot de passe oublié ? Contactez l’administrateur de votre compagnie. <Link to="/">Retour à l’accueil</Link>
+        </p>
+      </section>
+    </AuthShell>
   )
 }

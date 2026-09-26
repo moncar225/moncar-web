@@ -18,7 +18,15 @@
     <title>MON CAR</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Écran de démarrage : remplacé dès le premier rendu React. -->
+      <div
+        style="position: fixed; inset: 0; display: grid; place-items: center; background: #00245c; font-family: system-ui, sans-serif"
+        aria-label="Chargement de MON CAR"
+      >
+        <img src="/brand/logo.png" alt="" width="72" height="72" style="border-radius: 16px; background: #fff; padding: 6px" />
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

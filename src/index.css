@@ -82,35 +82,99 @@ img {
   max-width: 100%;
 }
 
-/* ——— Blocs d'état ——— */
+/* ——— Pages d'erreur (403, 404) ——— */
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mc-space-6);
+  padding: var(--mc-space-6) var(--mc-space-4);
+  background:
+    radial-gradient(circle at 80% 0%, var(--mc-color-accent-tint), transparent 40%),
+    radial-gradient(circle at 0% 100%, var(--mc-color-primary-tint), transparent 45%),
+    var(--mc-color-bg);
+}
+
+.error-page__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mc-space-2);
+  color: var(--mc-color-primary-deep);
+  font-weight: var(--mc-font-weight-extrabold);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
 .state-block {
+  width: 100%;
   max-width: 34rem;
-  margin: 4rem auto;
-  padding: var(--mc-space-6);
+  padding: var(--mc-space-7) var(--mc-space-6);
   text-align: center;
   background: var(--mc-color-surface);
   border: 1px solid var(--mc-color-border);
-  border-radius: var(--mc-radius-lg);
-  box-shadow: var(--mc-shadow-1);
+  border-radius: var(--mc-radius-xl);
+  box-shadow: var(--mc-shadow-3);
 }
 
-.state-block__code {
-  margin: 0;
-  font-size: var(--mc-font-size-xs);
-  font-weight: var(--mc-font-weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.state-block .state-block__code {
+  margin: 0 0 var(--mc-space-2);
+  font-size: clamp(3.5rem, 12vw, 5.5rem);
+  font-weight: var(--mc-font-weight-extrabold);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: var(--mc-gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.state-block h1 {
+  font-size: var(--mc-font-size-2xl);
+  margin-bottom: var(--mc-space-2);
+}
+
+.state-block p {
+  margin: 0 0 var(--mc-space-2);
   color: var(--mc-color-text-muted);
+}
+
+.state-block .state-block__motif {
+  display: inline-block;
+  margin-top: var(--mc-space-2);
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-md);
+  background: var(--mc-color-warning-tint);
+  color: var(--mc-color-warning);
+  font-size: var(--mc-font-size-sm);
+  font-weight: var(--mc-font-weight-semibold);
+}
+
+.state-block__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--mc-space-2);
+  margin-top: var(--mc-space-5);
 }
 
 /* ——— Loader plein écran (fallback Suspense) ——— */
 .page-loader {
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--mc-space-3);
   padding: var(--mc-space-8) var(--mc-space-5);
   color: var(--mc-color-text-muted);
+  font-size: var(--mc-font-size-sm);
+  font-weight: var(--mc-font-weight-medium);
+}
+
+.page-loader p {
+  margin: 0;
 }
 
 /* ——— Démonstrations techniques (catalogue uniquement) ——— */
