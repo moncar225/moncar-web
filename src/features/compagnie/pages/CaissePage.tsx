@@ -183,7 +183,7 @@ function Guichet({ journal }: { journal: JournalCaisse }) {
                 {voyage.data.arrets.filter((a) => a.ordre > montee).map((a) => <option key={a.id} value={a.ordre}>{a.nom}</option>)}
               </Select>
               {dispo.data !== undefined && (
-                <p className="muted" style={{ margin: 0 }}>
+                <p className="muted toolbar__note">
                   Prix du trajet : <strong>{fcfa(dispo.data.prix)}</strong> · {dispo.data.libres} siège(s) libre(s)
                 </p>
               )}
@@ -300,29 +300,29 @@ function JournalDuJour({ journal }: { journal: JournalCaisse }) {
   const [cloture, setCloture] = useState(false)
   return (
     <Card title={`Journal de caisse — ouverte à ${heure(journal.session.ouverture)}`}>
-      <div className="kpis" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
+      <div className="kpis kpis--2">
         <div className="kpi"><p className="kpi__label">Ventes</p><p className="kpi__value">{fcfa(journal.totalVentes)}</p></div>
         <div className="kpi"><p className="kpi__label">Billets</p><p className="kpi__value">{journal.nombreBillets}</p></div>
       </div>
       <ul className="list-plain">
         {Object.entries(journal.parMoyen).map(([m, total]) => (
-          <li key={m} className="row" style={{ justifyContent: 'space-between' }}>
+          <li key={m} className="row row--between">
             <span>{MOYENS[m as MoyenPaiement]}</span>
             <strong>{fcfa(total ?? 0)}</strong>
           </li>
         ))}
-        <li className="row" style={{ justifyContent: 'space-between' }}>
+        <li className="row row--between">
           <span>Espèces attendues en caisse (fond inclus)</span>
           <strong>{fcfa(journal.especesAttendues)}</strong>
         </li>
       </ul>
       <Button variant="secondary" onClick={() => setCloture(true)}>Clôturer la caisse</Button>
-      <h3 style={{ marginTop: 'var(--mc-space-4)' }}>Dernières ventes</h3>
+      <h3 className="section-title">Dernières ventes</h3>
       {journal.ventes.length === 0 && <p className="muted">Aucune vente pour l’instant.</p>}
       <ul className="list-plain">
         {journal.ventes.slice(0, 15).map((v) => (
           <li key={v.id}>
-            <div className="row" style={{ justifyContent: 'space-between' }}>
+            <div className="row row--between">
               <span>
                 <strong>{v.billetNumero}</strong> · siège {v.siege} · {v.passager.nom}
                 <br />

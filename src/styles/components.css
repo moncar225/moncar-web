@@ -396,6 +396,8 @@
 
 /* ——— Table ——— */
 .mc-table-wrap {
+  /* position : contient les libellés .sr-only absolus des en-têtes. */
+  position: relative;
   overflow-x: auto;
 }
 

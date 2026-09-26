@@ -8,12 +8,11 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 export default function AdminLayout() {
   useDocumentTitle('MON CAR — Administration PROSOFT')
   const { session } = useAuth()
-  const entite = null
   return (
     <AppShell
       espaceLabel="Administration PROSOFT"
       navItems={NAV_ADMIN}
-      breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Administration' }, ...(entite !== null ? [{ label: entite }] : [])]}
+      breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Administration' }]}
       title="Administration"
       user={session}
     >

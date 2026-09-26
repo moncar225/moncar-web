@@ -20,6 +20,8 @@ import {
   ToastProvider,
   useToast,
 } from '@/components/ui'
+import { HealthDemo } from '@/components/demo/HealthDemo'
+import { TechnoDemoForm } from '@/components/demo/TechnoDemoForm'
 import { API_ERROR_MESSAGES } from '@/api/errors/messages'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { env } from '@/lib/env'
@@ -246,6 +248,14 @@ export default function CataloguePage() {
               </div>
             ))}
           </dl>
+        </section>
+
+        <section className="page-section" aria-label="Démonstrations techniques">
+          <h2 className="page-section__title">Démonstrations techniques</h2>
+          <div className="catalogue__row">
+            <HealthDemo />
+            <TechnoDemoForm />
+          </div>
         </section>
 
         <p>

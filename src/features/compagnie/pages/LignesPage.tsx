@@ -23,16 +23,15 @@ export default function LignesPage() {
         {(data) => {
           const ligne = data.find((l) => l.id === choisie) ?? data[0]
           return (
-            <div className="split" style={{ gridTemplateColumns: 'minmax(0, 320px) minmax(0, 1fr)' }}>
+            <div className="split split--aside">
               <Card title="Lignes">
                 <ul className="list-plain">
                   {data.map((l) => (
                     <li key={l.id}>
                       <button
                         type="button"
-                        className="selectable"
+                        className="list-button selectable"
                         aria-current={l.id === ligne?.id}
-                        style={{ all: 'unset', cursor: 'pointer', display: 'block', width: '100%' }}
                         onClick={() => setChoisie(l.id)}
                       >
                         <strong>{l.code}</strong> {l.active ? null : <Badge>Désactivée</Badge>}

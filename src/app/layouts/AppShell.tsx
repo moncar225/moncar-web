@@ -76,7 +76,7 @@ export function AppShell({
         <strong>MON CAR</strong>
       </div>
       <p className="sidebar__space">{espaceLabel}</p>
-      <nav aria-label={`Navigation ${espaceLabel}`}>
+      <nav className="sidebar__nav" aria-label={`Navigation ${espaceLabel}`}>
         <ul>
           {visibles.map((item) => (
             <li key={item.id}>
@@ -159,7 +159,7 @@ export function AppShell({
 
         <div className="shell__content">
           <Breadcrumb items={breadcrumb} />
-          <div style={{ marginTop: 'var(--mc-space-4)' }}>{children}</div>
+          <div className="shell__page">{children}</div>
         </div>
       </div>
     </div>

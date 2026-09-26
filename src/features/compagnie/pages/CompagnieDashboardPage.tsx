@@ -23,7 +23,7 @@ export default function CompagnieDashboardPage() {
 export function BarresVentes({ serie }: { serie: TableauCompagnie['serie'] }) {
   const max = Math.max(1, ...serie.map((s) => s.app + s.guichet))
   return (
-    <figure style={{ margin: 0 }}>
+    <figure className="figure">
       <div className="barres" role="img" aria-label="Ventes par jour, application et guichet">
         {serie.map((s) => (
           <div key={s.jour} className="barres__col" title={`${s.jour} : app ${fcfa(s.app)}, guichet ${fcfa(s.guichet)}`}>
@@ -71,7 +71,7 @@ function Contenu({ t }: { t: TableauCompagnie }) {
           <Card title="Prochains départs" headerAction={<Link to="/compagnie/planning">Planning</Link>}>
             <ul className="list-plain">
               {t.prochainsDeparts.map((d) => (
-                <li key={d.id} className="row" style={{ justifyContent: 'space-between' }}>
+                <li key={d.id} className="row row--between">
                   <span><strong>{heure(d.depart)}</strong> {d.ligne}</span>
                   <StatutBadge table="voyage" statut={d.statut} />
                 </li>

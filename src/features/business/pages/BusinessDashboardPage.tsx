@@ -35,7 +35,7 @@ export default function BusinessDashboardPage() {
             <Card title="Prochaines locations">
               <ul className="list-plain">
                 {t.prochaines.map((d) => (
-                  <li key={d.id} className="row" style={{ justifyContent: 'space-between' }}>
+                  <li key={d.id} className="row row--between">
                     <span>
                       <strong>{d.vehicule}</strong> — {d.client.nom}
                       <br />

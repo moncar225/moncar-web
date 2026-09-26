@@ -134,6 +134,16 @@
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   align-items: start;
 }
+.split--aside {
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+}
+/* Les enfants de grille ne doivent jamais élargir la page (tableaux larges). */
+.stack > *,
+.split > *,
+.two-cols > *,
+.caisse > * {
+  min-width: 0;
+}
 @media (max-width: 1100px) {
   .two-cols,
   .split {
@@ -145,6 +155,17 @@
   gap: var(--mc-space-3);
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   margin-bottom: var(--mc-space-4);
+}
+.kpis--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.kpis--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 479px) {
+  .kpis--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .kpi {
   background: var(--mc-color-surface);
@@ -182,6 +203,32 @@
   flex-wrap: wrap;
   gap: var(--mc-space-2);
   align-items: center;
+}
+.row--between {
+  justify-content: space-between;
+}
+.section-title {
+  margin-top: var(--mc-space-4);
+}
+.toolbar__note {
+  margin: 0;
+  align-self: center;
+}
+.figure {
+  margin: 0;
+}
+.list-button {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-1) var(--mc-space-2);
+}
+.list-button:focus-visible {
+  outline: 2px solid var(--mc-color-accent);
+  outline-offset: 2px;
 }
 .list-plain {
   list-style: none;

@@ -35,7 +35,7 @@ function Programme({ programme: p, modifiable }: { programme: ProgrammeFidelite;
   const tauxRetour = (Number(f.pointsPour1000F) * Number(f.valeurPointF)) / 10
   return (
     <Card title={p.nom} headerAction={<Badge variant={p.actif ? 'success' : 'neutral'}>{p.actif ? 'Actif' : 'Inactif'}</Badge>}>
-      <div className="kpis" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+      <div className="kpis kpis--3">
         <div className="kpi"><p className="kpi__label">Membres</p><p className="kpi__value">{entier(p.membres)}</p></div>
         <div className="kpi"><p className="kpi__label">Points émis</p><p className="kpi__value">{entier(p.pointsEmis)}</p></div>
         <div className="kpi"><p className="kpi__label">Utilisés</p><p className="kpi__value">{entier(p.pointsUtilises)}</p></div>

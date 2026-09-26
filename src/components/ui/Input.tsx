@@ -41,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           {error}
         </p>
       ) : hint !== undefined ? (
-        <p className="mc-input__error" id={hintId} style={{ color: 'var(--mc-color-text-muted)' }}>
+        <p className="mc-input__hint" id={hintId}>
           {hint}
         </p>
       ) : null}
