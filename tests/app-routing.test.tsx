@@ -18,7 +18,7 @@ describe('Application moncar-web', () => {
   it('démarre sur l\u2019accueil public avec le logo officiel et les trois espaces', async () => {
     renderAt('/')
     expect(
-      await screen.findByRole('heading', { name: 'Plateforme de mobilité et transport' }),
+      await screen.findByRole('heading', { level: 1, name: /La mobilité ivoirienne/ }),
     ).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /logo mon car/i })).toHaveAttribute(
       'src',

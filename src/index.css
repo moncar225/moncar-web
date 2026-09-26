@@ -6,6 +6,7 @@
 @import './styles/components.css';
 @import './styles/shell.css';
 @import './styles/app.css';
+@import './styles/home.css';
 
 /* ——— Base ——— */
 * {
@@ -79,171 +80,6 @@ code {
 
 img {
   max-width: 100%;
-}
-
-/* Référence transport subtile : trame de « route » en fond du hero. */
-.route-pattern {
-  background-image: linear-gradient(
-      115deg,
-      transparent 0 62%,
-      var(--mc-color-primary-tint) 62% 64%,
-      transparent 64% 70%,
-      var(--mc-color-primary-tint) 70% 72%,
-      transparent 72%
-    ),
-    linear-gradient(var(--mc-color-surface), var(--mc-color-surface));
-}
-
-/* ——— Header public ——— */
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--mc-space-4);
-  padding: var(--mc-space-3) var(--mc-space-5);
-  background: var(--mc-color-surface);
-  border-bottom: 1px solid var(--mc-color-border);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--mc-space-3);
-  text-decoration: none;
-  color: inherit;
-}
-
-.brand__logo {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-  /* Le logo officiel est utilisé sans filtre ni recoloration. */
-}
-
-.brand__name {
-  font-size: var(--mc-font-size-lg);
-  font-weight: var(--mc-font-weight-bold);
-  color: var(--mc-color-primary-deep);
-  letter-spacing: 0.02em;
-}
-
-.site-header__links {
-  display: flex;
-  align-items: center;
-  gap: var(--mc-space-4);
-  font-size: var(--mc-font-size-sm);
-}
-
-/* ——— Hero ——— */
-.hero {
-  padding: var(--mc-space-7) var(--mc-space-5);
-}
-
-.hero__inner {
-  max-width: 64rem;
-  margin: 0 auto;
-}
-
-.hero__kicker {
-  display: inline-block;
-  margin: 0 0 var(--mc-space-3);
-  padding: var(--mc-space-1) var(--mc-space-3);
-  border-radius: var(--mc-radius-full);
-  background: var(--mc-color-primary-tint);
-  color: var(--mc-color-primary-deep);
-  font-size: var(--mc-font-size-xs);
-  font-weight: var(--mc-font-weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.hero h1 {
-  font-size: clamp(1.6rem, 4vw, var(--mc-font-size-2xl));
-  margin: 0 0 var(--mc-space-3);
-}
-
-.hero__lead {
-  max-width: 42rem;
-  color: var(--mc-color-text-muted);
-  margin: 0 0 var(--mc-space-5);
-}
-
-/* ——— Cartes d'espaces ——— */
-.space-cards {
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 0 var(--mc-space-5) var(--mc-space-7);
-  display: grid;
-  gap: var(--mc-space-4);
-}
-
-@media (min-width: 768px) {
-  .space-cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.space-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mc-space-2);
-  padding: var(--mc-space-5);
-  background: var(--mc-color-surface);
-  border: 1px solid var(--mc-color-border);
-  border-radius: var(--mc-radius-lg);
-  box-shadow: var(--mc-shadow-1);
-  text-decoration: none;
-  color: inherit;
-  transition: box-shadow var(--mc-transition-base), transform var(--mc-transition-base),
-    border-color var(--mc-transition-base);
-}
-
-.space-card:hover {
-  border-color: var(--mc-color-primary-soft);
-  box-shadow: var(--mc-shadow-2);
-  transform: translateY(-2px);
-  color: inherit;
-}
-
-.space-card__icon {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--mc-radius-md);
-  background: var(--mc-color-primary-tint);
-  color: var(--mc-color-primary);
-  margin-bottom: var(--mc-space-2);
-}
-
-.space-card__title {
-  font-weight: var(--mc-font-weight-semibold);
-  color: var(--mc-color-primary-deep);
-}
-
-.space-card__desc {
-  font-size: var(--mc-font-size-sm);
-  color: var(--mc-color-text-muted);
-}
-
-.space-card__cta {
-  margin-top: var(--mc-space-2);
-  font-size: var(--mc-font-size-sm);
-  font-weight: var(--mc-font-weight-semibold);
-  color: var(--mc-color-accent);
-}
-
-/* ——— Footer ——— */
-.site-footer {
-  padding: var(--mc-space-5);
-  text-align: center;
-  font-size: var(--mc-font-size-sm);
-  color: var(--mc-color-text-muted);
-  border-top: 1px solid var(--mc-color-border);
-  background: var(--mc-color-surface);
 }
 
 /* ——— Blocs d'état ——— */
@@ -397,22 +233,6 @@ img {
   color: var(--mc-color-surface);
   font-weight: var(--mc-font-weight-medium);
   font-size: var(--mc-font-size-sm);
-}
-
-/* ——— Responsive : header public et hero ——— */
-@media (max-width: 767px) {
-  .site-header {
-    padding: var(--mc-space-3) var(--mc-space-4);
-  }
-
-  .site-header__links {
-    display: none;
-  }
-
-  .hero {
-    padding: var(--mc-space-6) var(--mc-space-4);
-  }
-
 }
 
 /* ---- Catalogue du design system (/catalogue, dev et recette) ---- */
