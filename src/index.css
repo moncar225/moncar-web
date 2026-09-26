@@ -4,6 +4,7 @@
  */
 @import './styles/tokens.css';
 @import './styles/components.css';
+@import './styles/shell.css';
 @import './styles/app.css';
 
 /* ——— Base ——— */
@@ -245,201 +246,6 @@ img {
   background: var(--mc-color-surface);
 }
 
-/* ——— Layout des espaces : sidebar + header + contenu ——— */
-.shell {
-  display: grid;
-  grid-template-columns: 1fr;
-  min-height: 100vh;
-}
-
-@media (min-width: 1024px) {
-  .shell {
-    grid-template-columns: 240px 1fr;
-  }
-}
-
-.sidebar {
-  display: none;
-  background: var(--mc-color-primary-deep);
-  color: var(--mc-color-surface);
-  padding: var(--mc-space-4) var(--mc-space-3);
-}
-
-@media (min-width: 1024px) {
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--mc-space-4);
-    position: sticky;
-    top: 0;
-    height: 100vh;
-  }
-}
-
-.sidebar__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--mc-space-2);
-  padding: 0 var(--mc-space-2) var(--mc-space-3);
-  border-bottom: 1px solid rgb(255 255 255 / 0.15);
-}
-
-.sidebar__brand img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  background: var(--mc-color-surface);
-  border-radius: var(--mc-radius-full);
-  padding: 2px;
-}
-
-.sidebar__brand strong {
-  font-size: var(--mc-font-size-md);
-  letter-spacing: 0.02em;
-}
-
-.sidebar__space {
-  padding: 0 var(--mc-space-2);
-  font-size: var(--mc-font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgb(255 255 255 / 0.6);
-}
-
-.sidebar__nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 2px;
-}
-
-.sidebar__link {
-  display: flex;
-  align-items: center;
-  gap: var(--mc-space-3);
-  padding: var(--mc-space-2) var(--mc-space-3);
-  border-radius: var(--mc-radius-md);
-  color: rgb(255 255 255 / 0.85);
-  text-decoration: none;
-  font-size: var(--mc-font-size-sm);
-  transition: background var(--mc-transition-fast);
-}
-
-.sidebar__link:hover {
-  background: rgb(255 255 255 / 0.08);
-  color: var(--mc-color-surface);
-}
-
-.sidebar__link--active {
-  background: var(--mc-color-primary);
-  color: var(--mc-color-surface);
-  font-weight: var(--mc-font-weight-medium);
-}
-
-.sidebar__footer {
-  margin-top: auto;
-  padding-top: var(--mc-space-4);
-  border-top: 1px solid rgb(255 255 255 / 0.15);
-  font-size: var(--mc-font-size-xs);
-  color: rgb(255 255 255 / 0.6);
-}
-
-/* Drawer mobile (sidebar repliable < 1024px) */
-.sidebar--drawer {
-  position: fixed;
-  inset: 0 auto 0 0;
-  width: min(280px, 82vw);
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  gap: var(--mc-space-4);
-  box-shadow: var(--mc-shadow-3);
-  animation: mc-slide-in var(--mc-transition-base);
-  background: var(--mc-color-primary-deep);
-}
-
-@keyframes mc-slide-in {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgb(0 36 92 / 0.45);
-  z-index: 30;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.shell__main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: var(--mc-space-3);
-  padding: var(--mc-space-3) var(--mc-space-5);
-  background: var(--mc-color-surface);
-  border-bottom: 1px solid var(--mc-color-border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.topbar__burger {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--mc-color-border);
-  border-radius: var(--mc-radius-md);
-  background: var(--mc-color-surface);
-  color: var(--mc-color-primary-deep);
-  cursor: pointer;
-  transition: background var(--mc-transition-fast);
-}
-
-.topbar__burger:hover {
-  background: var(--mc-color-bg);
-}
-
-@media (min-width: 1024px) {
-  .topbar__burger {
-    display: none;
-  }
-}
-
-.topbar__title {
-  margin: 0;
-  font-size: var(--mc-font-size-lg);
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.shell__content {
-  flex: 1;
-  padding: var(--mc-space-5);
-  max-width: 76rem;
-  width: 100%;
-}
-
-.shell__page {
-  margin-top: var(--mc-space-4);
-}
-
 /* ——— Blocs d'état ——— */
 .state-block {
   max-width: 34rem;
@@ -607,9 +413,6 @@ img {
     padding: var(--mc-space-6) var(--mc-space-4);
   }
 
-  .shell__content {
-    padding: var(--mc-space-4);
-  }
 }
 
 /* ---- Catalogue du design system (/catalogue, dev et recette) ---- */

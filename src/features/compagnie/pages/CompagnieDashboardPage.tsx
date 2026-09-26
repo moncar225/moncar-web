@@ -3,7 +3,7 @@ import { Alert, Card } from '@/components/ui'
 import { PageHeader, QueryView } from '@/features/shared/components/Page'
 import { StatutBadge } from '@/features/shared/labels'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
-import { fcfa, heure } from '@/lib/format'
+import { date, fcfa, heure } from '@/lib/format'
 import { useTableauCompagnie, type TableauCompagnie } from '@/services/plateforme'
 
 /** Tableau de bord consolidé du directeur général (roadmap §11.1). */
@@ -12,7 +12,7 @@ export default function CompagnieDashboardPage() {
   const tableau = useTableauCompagnie()
   return (
     <>
-      <PageHeader title="Vue générale" description="Activité du jour, ventes des 14 derniers jours et points d’attention." />
+      <PageHeader title="Tableau de bord" description="Activité du jour, ventes des 14 derniers jours et points d’attention." />
       <QueryView query={tableau} loading="Calcul des indicateurs…">
         {(t) => <Contenu t={t} />}
       </QueryView>
@@ -26,7 +26,7 @@ export function BarresVentes({ serie }: { serie: TableauCompagnie['serie'] }) {
     <figure className="figure">
       <div className="barres" role="img" aria-label="Ventes par jour, application et guichet">
         {serie.map((s) => (
-          <div key={s.jour} className="barres__col" title={`${s.jour} : app ${fcfa(s.app)}, guichet ${fcfa(s.guichet)}`}>
+          <div key={s.jour} className="barres__col" title={`${date(`${s.jour}T12:00:00`)} : application ${fcfa(s.app)}, guichet ${fcfa(s.guichet)}`}>
             <span className="barres__seg--app" style={{ height: `${(s.app / max) * 100}%` }} />
             <span className="barres__seg--guichet" style={{ height: `${(s.guichet / max) * 100}%` }} />
           </div>

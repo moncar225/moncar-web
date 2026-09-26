@@ -28,7 +28,8 @@ describe('Connexion des postes web (faux backend)', () => {
     await seConnecter('caisse@lagune.demo', 'Moncar2026')
     await screen.findByRole('navigation', { name: /navigation espace compagnie/i })
     expect(router.state.location.pathname).toBe('/compagnie/caisse')
-    expect(screen.getByText(/Caisse · Gare d’Adjamé/)).toBeInTheDocument()
+    expect(screen.getByText(/Lagune Express.* · Gare d’Adjamé/)).toBeInTheDocument()
+    expect(screen.getByText('Caisse', { selector: '.topbar__user-text small' })).toBeInTheDocument()
   })
 
   it('exige la double authentification pour le directeur général', async () => {

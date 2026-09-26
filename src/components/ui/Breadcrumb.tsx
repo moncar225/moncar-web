@@ -12,11 +12,13 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
     <nav className="mc-breadcrumb" aria-label="Fil d'Ariane">
       <ol>
         {items.map((item, index) => {
-          const current = item.to === undefined || index === items.length - 1
+          const current = index === items.length - 1
           return (
             <li key={item.label}>
-              {current || item.to === undefined ? (
+              {current ? (
                 <span aria-current="page">{item.label}</span>
+              ) : item.to === undefined ? (
+                <span>{item.label}</span>
               ) : (
                 <Link to={item.to}>{item.label}</Link>
               )}

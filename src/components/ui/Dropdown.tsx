@@ -12,13 +12,26 @@ interface DropdownProps {
   items: DropdownItem[]
   /** Aligne le menu à droite (utile en fin de header). */
   align?: 'left' | 'right'
+  /** Classe du déclencheur (par défaut : bouton outline). */
+  triggerClassName?: string
+  /** Nom accessible du déclencheur quand son contenu n'est pas explicite. */
+  triggerLabel?: string
+  /** Contenu non interactif affiché en tête du menu (identité…). */
+  header?: ReactNode
 }
 
 /**
  * Menu déroulant du Design System MON CAR.
  * Accessible au clavier : Entrée/Espace ouvre, Échap ferme, clic extérieur ferme.
  */
-export function Dropdown({ trigger, items, align = 'left' }: DropdownProps) {
+export function Dropdown({
+  trigger,
+  items,
+  align = 'left',
+  triggerClassName = 'mc-btn mc-btn--outline',
+  triggerLabel,
+  header,
+}: DropdownProps) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const menuId = useId()
@@ -45,7 +58,8 @@ export function Dropdown({ trigger, items, align = 'left' }: DropdownProps) {
     <div className="mc-dropdown" ref={rootRef}>
       <button
         type="button"
-        className="mc-btn mc-btn--outline"
+        className={triggerClassName}
+        aria-label={triggerLabel}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
@@ -55,6 +69,11 @@ export function Dropdown({ trigger, items, align = 'left' }: DropdownProps) {
       </button>
       {open && (
         <ul id={menuId} role="menu" className={align === 'right' ? 'mc-dropdown__menu mc-dropdown__menu--right' : 'mc-dropdown__menu'}>
+          {header !== undefined && (
+            <li role="none" className="mc-dropdown__header">
+              {header}
+            </li>
+          )}
           {items.map((item) => (
             <li key={item.label} role="none">
               <button

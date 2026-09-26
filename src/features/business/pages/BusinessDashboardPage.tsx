@@ -8,11 +8,11 @@ import { useTableauBusiness } from '@/services/business'
 
 /** Tableau de bord de l'agence / du propriétaire (espace BUSINESS). */
 export default function BusinessDashboardPage() {
-  useDocumentTitle('MON CAR — Espace Business')
+  useDocumentTitle('MON CAR — Tableau de bord')
   const tableau = useTableauBusiness()
   return (
     <>
-      <PageHeader title="Vue générale" description="Vos véhicules, vos demandes et vos revenus de location." />
+      <PageHeader title="Tableau de bord" description="Vos véhicules, vos demandes et vos revenus de location." />
       <QueryView query={tableau} loading="Indicateurs…">
         {(t) => (
           <div className="stack">

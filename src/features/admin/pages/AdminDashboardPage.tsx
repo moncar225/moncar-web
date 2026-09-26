@@ -8,12 +8,12 @@ import { useTableauAdmin } from '@/services/plateforme'
 
 /** Tableau de bord PROSOFT : partenaires, volume, commissions, files de travail. */
 export default function AdminDashboardPage() {
-  useDocumentTitle('MON CAR — Administration')
+  useDocumentTitle('MON CAR — Tableau de bord')
   const tableau = useTableauAdmin()
   const can = useCan()
   return (
     <>
-      <PageHeader title="Vue générale" description="Plateforme MON CAR — toutes compagnies et tous fournisseurs." />
+      <PageHeader title="Tableau de bord" description="Plateforme MON CAR — toutes compagnies et tous fournisseurs." />
       <QueryView query={tableau} loading="Indicateurs de la plateforme…">
         {(t) => (
           <div className="stack">

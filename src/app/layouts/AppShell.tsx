@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import type { BreadcrumbItem } from '@/components/ui/Breadcrumb'
 import { Avatar } from '@/components/ui/Avatar'
-import { Button } from '@/components/ui/Button'
+import { Dropdown } from '@/components/ui/Dropdown'
+import { Icon, isIconName } from '@/components/ui/Icon'
 import type { Permission } from '@/domain/permissions'
 import { env } from '@/lib/env'
 import { httpClient } from '@/api/client'
@@ -23,37 +24,37 @@ export interface ShellNavItem {
 interface AppShellProps {
   /** Nom de l'espace affiché sous la marque dans la sidebar. */
   espaceLabel: string
+  /** Racine de l'espace (ex. « /compagnie »), cible du fil d'Ariane. */
+  racine: string
   navItems: ShellNavItem[]
-  breadcrumb: BreadcrumbItem[]
-  /** Titre de la page dans la barre supérieure. */
+  /** Titre de l'espace dans la barre supérieure. */
   title: string
   /** Actions à droite de la barre (sélecteur d'entité…). */
   actions?: ReactNode
-  /** Utilisateur de la session (avatar dans la topbar). */
+  /** Utilisateur de la session (menu utilisateur de la topbar). */
   user: SessionUser | null
   children: ReactNode
 }
 
 /**
- * Shell commun des espaces protégés MON CAR : sidebar bleue (identité),
- * topbar blanche (espace + lisibilité), breadcrumb, contenu.
+ * Shell commun des espaces protégés MON CAR : sidebar bleu nuit (identité),
+ * topbar blanche (espace, entité, utilisateur), fil d'Ariane, contenu.
  * Responsive : la sidebar devient un drawer sous 1024px.
  */
-export function AppShell({
-  espaceLabel,
-  navItems,
-  breadcrumb,
-  title,
-  actions,
-  user,
-  children,
-}: AppShellProps) {
+export function AppShell({ espaceLabel, racine, navItems, title, actions, user, children }: AppShellProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { logout } = useAuth()
+  const { pathname } = useLocation()
   const visibles = navItems.filter(
     (item) => item.permission === undefined || (user?.permissions?.includes(item.permission) ?? false),
   )
-  const entite = user?.gare?.nom ?? user?.compagnie?.nom ?? user?.fournisseur?.nom ?? null
+  const entite = [user?.compagnie?.nom ?? user?.fournisseur?.nom, user?.gare?.nom].filter(Boolean).join(' · ')
+  const courante = visibles.find((item) => item.to === pathname)
+  const breadcrumb: BreadcrumbItem[] = [
+    { label: 'Accueil', to: '/' },
+    { label: title, to: racine },
+    ...(courante !== undefined && courante.to !== racine ? [{ label: courante.label }] : []),
+  ]
 
   async function reinitialiserDemo() {
     await httpClient.post('/demo/reinitialisation', { skipIdempotency: true })
@@ -73,36 +74,47 @@ export function AppShell({
     <>
       <div className="sidebar__brand">
         <img src="/brand/logo.png" alt="Logo MON CAR" />
-        <strong>MON CAR</strong>
+        <div>
+          <strong>MON CAR</strong>
+          <span>{espaceLabel}</span>
+        </div>
       </div>
-      <p className="sidebar__space">{espaceLabel}</p>
       <nav className="sidebar__nav" aria-label={`Navigation ${espaceLabel}`}>
+        <p className="sidebar__section" aria-hidden="true">
+          Menu
+        </p>
         <ul>
           {visibles.map((item) => (
             <li key={item.id}>
               <NavLink
                 to={item.to}
                 end
-                className={({ isActive }) =>
-                  `sidebar__link${isActive ? ' sidebar__link--active' : ''}`
-                }
+                onClick={() => setDrawerOpen(false)}
+                className={({ isActive }) => `sidebar__link${isActive ? ' sidebar__link--active' : ''}`}
               >
-                {item.label}
+                {isIconName(item.id) && <Icon name={item.id} size={18} />}
+                <span>{item.label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
-      {env.enableMocks && (
-        <div className="sidebar__demo">
-          <Button size="sm" variant="ghost" onClick={() => void reinitialiserDemo()}>
-            Réinitialiser la démo
-          </Button>
-        </div>
-      )}
-      <p className="sidebar__footer">
-        {env.enableMocks ? 'Données de démonstration (faux backend) — API MON CAR à venir.' : `Environnement ${env.appEnvLabel}`}
-      </p>
+      <div className="sidebar__footer">
+        {env.enableMocks ? (
+          <>
+            <p>
+              <span className="sidebar__pulse" aria-hidden="true" />
+              Données de démonstration
+            </p>
+            <button type="button" className="sidebar__demo" onClick={() => void reinitialiserDemo()}>
+              <Icon name="refresh" size={14} />
+              Réinitialiser la démo
+            </button>
+          </>
+        ) : (
+          <p>Environnement {env.appEnvLabel}</p>
+        )}
+      </div>
     </>
   )
 
@@ -134,26 +146,36 @@ export function AppShell({
             aria-label="Ouvrir le menu de navigation"
             onClick={() => setDrawerOpen(true)}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Icon name="menu" />
           </button>
-          <h1 className="topbar__title">{title}</h1>
+          <div className="topbar__heading">
+            <h1 className="topbar__title">{title}</h1>
+            {entite !== '' && <p className="topbar__entite">{entite}</p>}
+          </div>
           {actions}
           {user !== null && (
-            <div className="topbar__user">
-              <div>
-                {user.fullName}
-                <small>
-                  {user.posteLibelle ?? ''}
-                  {entite !== null ? ` · ${entite}` : ''}
-                </small>
-              </div>
-              <Avatar name={user.fullName} size="sm" />
-              <Button size="sm" variant="outline" onClick={logout}>
-                Déconnexion
-              </Button>
-            </div>
+            <Dropdown
+              align="right"
+              triggerClassName="topbar__user"
+              triggerLabel={`Compte de ${user.fullName}`}
+              trigger={
+                <>
+                  <Avatar name={user.fullName} size="sm" />
+                  <span className="topbar__user-text">
+                    {user.fullName}
+                    {user.posteLibelle !== undefined && <small>{user.posteLibelle}</small>}
+                  </span>
+                  <Icon name="chevronDown" size={16} />
+                </>
+              }
+              header={
+                <>
+                  <strong>{user.fullName}</strong>
+                  <span>{[user.posteLibelle, entite].filter(Boolean).join(' · ')}</span>
+                </>
+              }
+              items={[{ label: 'Déconnexion', onSelect: logout }]}
+            />
           )}
         </header>
 

@@ -156,7 +156,7 @@
 .kpis {
   display: grid;
   gap: var(--mc-space-4);
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   margin-bottom: var(--mc-space-4);
 }
 .kpis--2 {
@@ -291,22 +291,6 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: var(--mc-font-size-lg);
   letter-spacing: 0.08em;
-}
-
-/* ——— Topbar : utilisateur ——— */
-.topbar__user {
-  display: flex;
-  align-items: center;
-  gap: var(--mc-space-2);
-  font-size: var(--mc-font-size-sm);
-  text-align: right;
-}
-.topbar__user small {
-  display: block;
-  color: var(--mc-color-text-muted);
-}
-.sidebar__demo {
-  margin: var(--mc-space-3) var(--mc-space-3) 0;
 }
 
 /* ——— Impression (manifestes, billets, bons de colis) ——— */
@@ -644,11 +628,4 @@
 }
 .legende-barres span.guichet::before {
   background: var(--mc-color-accent);
-}
-.sidebar__demo .mc-btn {
-  color: #fff;
-  border: 1px solid rgb(255 255 255 / 0.45);
-}
-.sidebar__demo .mc-btn:hover:not(:disabled) {
-  background: rgb(255 255 255 / 0.12);
 }

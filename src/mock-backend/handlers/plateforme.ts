@@ -5,7 +5,7 @@
  */
 import { http, type HttpHandler } from 'msw'
 import type { Compte, Litige, ParametresPlateforme, ProgrammeFidelite, Promotion } from '@/domain/types'
-import { jourDe } from '@/lib/format'
+import { date, fcfa, jourDe } from '@/lib/format'
 import { db, nouvelId, prochainNumero } from '../db'
 import { reservationActive } from '../metier'
 import { numerosSieges } from '../seed'
@@ -28,6 +28,11 @@ function auteurDe(compte: Compte): { type: 'compagnie' | 'fournisseur'; id: stri
     return { type: 'fournisseur', id: compte.fournisseurId, nom: db().fournisseurs.find((f) => f.id === compte.fournisseurId)?.nom ?? '' }
   }
   return null
+}
+
+/** Jour AAAA-MM-JJ affiché JJ/MM/AAAA (lu à midi local : pas de décalage UTC). */
+function dateJour(j: string): string {
+  return date(`${j.slice(0, 10)}T12:00:00`)
 }
 
 export const plateformeHandlers: HttpHandler[] = [
@@ -58,12 +63,12 @@ export const plateformeHandlers: HttpHandler[] = [
     const bientot = jourDe(new Date(Date.now() + 7 * 86400000))
     for (const v of db().vehicules.filter((x) => x.compagnieId === cid)) {
       if (v.etat === 'maintenance') alertes.push(`Véhicule ${v.immatriculation} en maintenance.`)
-      else if (v.prochaineMaintenance !== undefined && v.prochaineMaintenance <= bientot) alertes.push(`Maintenance du ${v.immatriculation} prévue le ${v.prochaineMaintenance}.`)
+      else if (v.prochaineMaintenance !== undefined && v.prochaineMaintenance <= bientot) alertes.push(`Maintenance du ${v.immatriculation} prévue le ${dateJour(v.prochaineMaintenance)}.`)
     }
     const sansAffectation = voyages.filter((v) => v.statut === 'programme' && (v.vehiculeId === undefined || v.chauffeurId === undefined) && new Date(v.depart).getTime() < Date.now() + 3 * 86400000)
     if (sansAffectation.length > 0) alertes.push(`${sansAffectation.length} voyage(s) des 3 prochains jours sans véhicule ou chauffeur.`)
     for (const s of db().sessionsCaisse.filter((x) => x.ecart !== undefined && x.ecart !== 0)) {
-      alertes.push(`Écart de caisse de ${s.ecart ?? 0} F à la clôture du ${jour(s.cloture ?? s.ouverture)}.`)
+      alertes.push(`Écart de caisse de ${fcfa(s.ecart ?? 0)} à la clôture du ${date(s.cloture ?? s.ouverture)}.`)
     }
     return ok({
       voyagesDuJour: duJour.length,

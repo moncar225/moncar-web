@@ -60,7 +60,7 @@ describe('Application moncar-web', () => {
   it('charge l\u2019espace compagnie (lazy) avec son dashboard de démonstration', async () => {
     renderAt('/compagnie', connecte('u-dg', 'dg'))
     expect(await screen.findByRole('heading', { name: 'Compagnie' })).toBeInTheDocument()
-    expect(await screen.findByText('Vue générale')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Tableau de bord' })).toBeInTheDocument()
     expect(await screen.findByText('Billets vendus aujourd’hui')).toBeInTheDocument()
   })
 
@@ -80,7 +80,7 @@ describe('Application moncar-web', () => {
   it('charge l\u2019espace admin (lazy) pour un administrateur', async () => {
     renderAt('/admin', connecte('u-adm', 'admin_super'))
     expect(await screen.findByRole('heading', { name: 'Administration' })).toBeInTheDocument()
-    expect(await screen.findByText('Vue générale')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Tableau de bord' })).toBeInTheDocument()
     expect(await screen.findByText('Commissions PROSOFT')).toBeInTheDocument()
   })
 })
