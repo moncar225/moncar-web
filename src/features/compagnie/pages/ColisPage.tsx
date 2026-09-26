@@ -36,7 +36,7 @@ export default function ColisPage() {
     <>
       <PageHeader
         title="Service colis"
-        description={session?.gare?.nom ?? undefined}
+        description={gareId !== undefined ? nomGare(gareId) : undefined}
         actions={<Button onClick={() => setNouveau(true)}>Enregistrer un colis</Button>}
       />
       <QueryView query={colis} loading="Colis de la gare…">

@@ -595,10 +595,10 @@
   background: var(--mc-color-surface);
   border: 3px solid var(--mc-color-accent);
 }
-.arrets-table input,
-.arrets-table select {
+.mc-table input:not([type='checkbox']):not([type='radio']),
+.mc-table select {
   width: 100%;
-  min-width: 70px;
+  min-width: 90px;
   min-height: 34px;
   font: inherit;
   font-size: var(--mc-font-size-sm);
@@ -608,8 +608,8 @@
   background: var(--mc-color-surface);
   color: var(--mc-color-text);
 }
-.arrets-table input:focus,
-.arrets-table select:focus {
+.mc-table input:focus,
+.mc-table select:focus {
   outline: none;
   border-color: var(--mc-color-primary);
   box-shadow: var(--mc-ring);

@@ -68,7 +68,7 @@ export interface MockDb {
   sequences: Record<string, number>
 }
 
-export const MOCK_DB_VERSION = 2
+export const MOCK_DB_VERSION = 3
 export const MOT_DE_PASSE_DEMO = 'Moncar2026'
 
 // ——— Utilitaires déterministes ———
@@ -97,6 +97,11 @@ function venduLe(rnd: () => number, offset: number): string {
   const maintenant = new Date()
   const minutes = Math.floor(rnd() * Math.max(1, maintenant.getHours() * 60 + maintenant.getMinutes()))
   return jourIso(0, Math.floor(minutes / 60), minutes % 60)
+}
+
+/** Date lisible JJ/MM/AAAA (libellés de période). */
+function dateFr(offset: number): string {
+  return new Date(jourIso(offset, 12)).toLocaleDateString('fr-FR')
 }
 
 function dateIso(offset: number): string {
@@ -502,21 +507,28 @@ export function construireDb(): MockDb {
     }
   }
 
+  // Reversements hebdomadaires calculés à partir des ventes en ligne réelles
+  // de chaque semaine écoulée (la dernière semaine reste à payer) : le solde
+  // dû par MON CAR ne peut donc jamais devenir négatif.
   const reversements: Reversement[] = []
   for (const c of ['c-lagune', 'c-savane']) {
     for (let s = 4; s >= 1; s--) {
-      const brut = Math.round((1800000 + rnd() * 900000) / 100) * 100
-      const commission = Math.round(brut * 0.05)
+      const debut = Date.parse(jourIso(-7 * s))
+      const fin = Date.parse(jourIso(-7 * s + 7))
+      const semaine = ecritures.filter((e) => e.compagnieId === c && Date.parse(e.date) >= debut && Date.parse(e.date) < fin)
+      const brut = semaine.filter((e) => e.journal === 'vente').reduce((t, e) => t + e.montant, 0)
+      if (brut === 0) continue
+      const commission = semaine.filter((e) => e.journal === 'commission').reduce((t, e) => t + e.montant, 0)
       reversements.push({
         id: `rv-${c}-${s}`,
         compagnieId: c,
-        periode: `Semaine du ${dateIso(-7 * s - 6)} au ${dateIso(-7 * s)}`,
+        periode: `Semaine du ${dateFr(-7 * s)} au ${dateFr(-7 * s + 6)}`,
         montantBrut: brut,
         commission,
         montantNet: brut - commission,
-        echeance: dateIso(-7 * s + 3),
+        echeance: dateIso(-7 * s + 10),
         statut: s === 1 ? 'a_payer' : 'paye',
-        payeLe: s === 1 ? undefined : jourIso(-7 * s + 3, 11),
+        payeLe: s === 1 ? undefined : jourIso(-7 * s + 10, 11),
       })
     }
   }

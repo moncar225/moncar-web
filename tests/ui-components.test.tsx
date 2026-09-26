@@ -67,7 +67,7 @@ describe('Breadcrumb', () => {
         />
       </MemoryRouter>,
     )
-    const nav = screen.getByRole('navigation', { name: /fil d'ariane/i })
+    const nav = screen.getByRole('navigation', { name: /fil d’ariane/i })
     expect(nav).toHaveTextContent('Accueil')
     expect(nav.querySelector('[aria-current="page"]')).toHaveTextContent('Compagnie')
   })

@@ -51,7 +51,7 @@ export function HealthDemo() {
         <div className="mc-demo-panel__body">
           <EmptyState
             title="Aucune donnée exploitable"
-            message="Le serveur n'a pas retourné d'état reconnu."
+            message="Le serveur n’a pas retourné d’état reconnu."
           />
         </div>
       </div>

@@ -6,6 +6,8 @@ import { connecte, renderAt } from './helpers'
 
 type Utilisateur = ReturnType<typeof userEvent.setup>
 
+const GARE_ADJAME = { id: 'g-adj', nom: 'Gare d’Adjamé' }
+
 async function ouvrirCaisseEtChoisirSiege(user: Utilisateur): Promise<string> {
   await user.click(await screen.findByRole('button', { name: 'Ouvrir la caisse' }))
   const voyages = await screen.findAllByRole('button', { pressed: false })
@@ -22,9 +24,15 @@ async function ouvrirCaisseEtChoisirSiege(user: Utilisateur): Promise<string> {
 }
 
 describe('Postes de gare — caisse, chef de gare, colis', () => {
+  it('explique que la caisse exige un compte rattaché à une gare', async () => {
+    renderAt('/compagnie/caisse', connecte('u-dg', 'dg'))
+    expect(await screen.findByText('Caisse réservée aux postes de gare')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ouvrir la caisse' })).not.toBeInTheDocument()
+  })
+
   it('vend un billet au guichet puis clôture la caisse (écart à justifier)', async () => {
     const user = userEvent.setup()
-    renderAt('/compagnie/caisse', connecte('u-cai', 'caisse'))
+    renderAt('/compagnie/caisse', connecte('u-cai', 'caisse', { gare: GARE_ADJAME }))
     const numero = await ouvrirCaisseEtChoisirSiege(user)
     await user.click(screen.getByRole('button', { name: 'Encaisser et imprimer' }))
     expect(await screen.findByText(/1 billet\(s\) émis/)).toBeInTheDocument()
@@ -46,7 +54,7 @@ describe('Postes de gare — caisse, chef de gare, colis', () => {
 
   it('refuse un siège vendu entre-temps par un autre canal (409)', async () => {
     const user = userEvent.setup()
-    renderAt('/compagnie/caisse', connecte('u-cai', 'caisse'))
+    renderAt('/compagnie/caisse', connecte('u-cai', 'caisse', { gare: GARE_ADJAME }))
     const numero = await ouvrirCaisseEtChoisirSiege(user)
     // Pendant la saisie, l'app client vend le même siège sur tout le trajet.
     const voyageSelectionne = db().voyages.find((v) =>

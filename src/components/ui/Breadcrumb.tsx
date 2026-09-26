@@ -9,7 +9,7 @@ export interface BreadcrumbItem {
 /** Fil d'Ariane du Design System MON CAR. */
 export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   return (
-    <nav className="mc-breadcrumb" aria-label="Fil d'Ariane">
+    <nav className="mc-breadcrumb" aria-label="Fil d’Ariane">
       <ol>
         {items.map((item, index) => {
           const current = index === items.length - 1

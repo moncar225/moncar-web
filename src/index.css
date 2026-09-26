@@ -64,6 +64,21 @@ a:hover {
   color: var(--mc-color-accent);
 }
 
+fieldset {
+  margin: 0;
+  padding: var(--mc-space-3) var(--mc-space-4) var(--mc-space-4);
+  border: 1px solid var(--mc-color-border);
+  border-radius: var(--mc-radius-md);
+  min-width: 0;
+}
+
+legend {
+  padding: 0 var(--mc-space-2);
+  font-size: var(--mc-font-size-sm);
+  font-weight: var(--mc-font-weight-semibold);
+  color: var(--mc-color-primary-deep);
+}
+
 code {
   font-family: var(--mc-font-mono);
   font-size: 0.9em;

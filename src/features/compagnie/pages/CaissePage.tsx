@@ -39,9 +39,16 @@ export default function CaissePage() {
         title="Caisse"
         description={session?.gare?.nom ?? 'Aucune gare de rattachement'}
       />
-      <QueryView query={caisse} loading="Ouverture de la caisse…">
-        {(journal) => (journal === null ? <OuvertureCaisse /> : <Guichet journal={journal} />)}
-      </QueryView>
+      {(session?.gare ?? null) === null ? (
+        <EmptyState
+          title="Caisse réservée aux postes de gare"
+          message="La vente au guichet se fait depuis un compte rattaché à une gare. Rattachez un caissier à sa gare dans « Personnel et gares »."
+        />
+      ) : (
+        <QueryView query={caisse} loading="Ouverture de la caisse…">
+          {(journal) => (journal === null ? <OuvertureCaisse /> : <Guichet journal={journal} />)}
+        </QueryView>
+      )}
     </>
   )
 }
